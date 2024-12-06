@@ -1,8 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Send } from "lucide-react";
+import { SearchInput } from "@/components/presets/search-input";
+import { FilterSelect } from "@/components/presets/filter-select";
+import { CustomButton } from "@/components/presets/custom-button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -10,8 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
+
 interface Message {
   role: "user" | "assistant";
   content: string;
@@ -20,7 +22,7 @@ interface Message {
 export function MiddlePanel() {
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [input, setInput] = React.useState("");
-  const scrollAreaRef = React.useRef<HTMLDivElement>(null);
+  const [model, setModel] = React.useState("gpt-4");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,63 +35,144 @@ export function MiddlePanel() {
 
     setMessages((prev) => [...prev, newMessage]);
     setInput("");
+    // Here you would typically call your AI service
   };
 
-  React.useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
-    }
-  }, [messages]);
-
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex flex-col space-y-2 border-b p-4 sm:flex-row sm:items-center sm:space-x-4 sm:space-y-0">
-        <Select defaultValue="gpt-4">
-          <SelectTrigger className="w-full sm:w-[200px]">
-            <SelectValue placeholder="Select model" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="gpt-4">GPT-4</SelectItem>
-            <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo</SelectItem>
-          </SelectContent>
-        </Select>
-        <div className="flex flex-1 space-x-2">
-          <Button variant="secondary" className="flex-1 sm:flex-none">
-            Clear
-          </Button>
-          <Button variant="secondary" className="flex-1 sm:flex-none">
-            Export
-          </Button>
-        </div>
+    <div className="flex flex-col h-full">
+      {/* Preset CTA Area */}
+      <div className="border-b h-[180px]">
+        <ScrollArea className="w-full h-full">
+          <div className="flex flex-col p-4 space-y-4 min-w-[800px]">
+            {/* Search bars row */}
+            <div className="flex space-x-4">
+              <SearchInput
+                variant="left-icon"
+                placeholder="Search..."
+                className="w-[200px]"
+              />
+              <SearchInput
+                variant="right-icon"
+                placeholder="Search..."
+                className="w-[200px]"
+              />
+            </div>
+
+            {/* Filters row */}
+            <div className="flex space-x-4">
+              <FilterSelect
+                variant="ghost"
+                placeholder="Filter 1 (Ghost)"
+                options={[
+                  { value: "option1", label: "Option 1" },
+                  { value: "option2", label: "Option 2" },
+                  { value: "option3", label: "Option 3" },
+                ]}
+                className="w-[200px]"
+              />
+              <FilterSelect
+                variant="outline"
+                placeholder="Filter 2 (Outline)"
+                options={[
+                  { value: "option1", label: "Option 1" },
+                  { value: "option2", label: "Option 2" },
+                  { value: "option3", label: "Option 3" },
+                ]}
+                className="w-[200px]"
+              />
+              <FilterSelect
+                variant="solid"
+                placeholder="Filter 3 (Solid)"
+                options={[
+                  { value: "option1", label: "Option 1" },
+                  { value: "option2", label: "Option 2" },
+                  { value: "option3", label: "Option 3" },
+                ]}
+                className="w-[200px]"
+              />
+            </div>
+
+            {/* Buttons row */}
+            <div className="flex space-x-4">
+              <CustomButton variant="ghost" className="w-[150px]">
+                Export
+              </CustomButton>
+              <CustomButton variant="outline" className="w-[150px]">
+                Import
+              </CustomButton>
+              <CustomButton variant="default" className="w-[150px]">
+                Settings
+              </CustomButton>
+              <CustomButton variant="secondary" className="w-[150px]">
+                Analytics
+              </CustomButton>
+              <CustomButton variant="destructive" className="w-[150px]">
+                Delete
+              </CustomButton>
+            </div>
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
-      <ScrollArea ref={scrollAreaRef} className="flex-1 p-4">
-        <div className="space-y-4">
-          {messages.map((message, i) => (
+
+      {/* Custom Area */}
+      <div className="flex-grow border-b p-4 overflow-auto">
+        <h2 className="text-2xl font-bold mb-4">Custom Area</h2>
+        <p className="text-muted-foreground">
+          This is a placeholder for your application-specific features. You can
+          add any custom components, data visualizations, or other content here.
+        </p>
+      </div>
+
+      {/* AI Chat Area */}
+      <div className="h-[180px] md:h-[200px] flex flex-col">
+        <div className="flex-grow overflow-auto p-2">
+          {messages.map((message, index) => (
             <div
-              key={i}
-              className={cn(
-                "flex w-max max-w-[80%] flex-col rounded-lg px-4 py-2 text-sm",
-                message.role === "user"
-                  ? "ml-auto bg-primary text-primary-foreground"
-                  : "bg-muted"
-              )}
+              key={index}
+              className={`mb-2 ${
+                message.role === "user" ? "text-right" : "text-left"
+              }`}
             >
-              {message.content}
+              <span
+                className={`inline-block p-2 rounded-lg ${
+                  message.role === "user"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted"
+                }`}
+              >
+                {message.content}
+              </span>
             </div>
           ))}
         </div>
-      </ScrollArea>
-      <form onSubmit={handleSubmit} className="border-t p-4">
-        <div className="flex space-x-2">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-1"
-          />
-          <Button type="submit">Send</Button>
-        </div>
-      </form>
+        <form onSubmit={handleSubmit} className="p-2 border-t">
+          <div className="relative flex items-center">
+            <Select value={model} onValueChange={setModel}>
+              <SelectTrigger className="absolute top-2 left-2 w-[100px] h-6 text-xs bg-transparent border-none">
+                <SelectValue placeholder="Model" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="gpt-4">GPT-4</SelectItem>
+                <SelectItem value="gpt-3.5-turbo">GPT-3.5</SelectItem>
+              </SelectContent>
+            </Select>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type your message..."
+              className="flex-grow pl-2 pr-10 pt-8 min-h-[80px] resize-none"
+            />
+            <button
+              type="submit"
+              className="absolute bottom-2 right-2 bg-primary text-primary-foreground rounded-full h-8 w-8 flex items-center justify-center"
+            >
+              <Send className="h-4 w-4" />
+              <span className="sr-only">Send message</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,31 +1,35 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { TopNav } from "@/components/top-nav"
-import { LeftPanel } from "@/components/left-panel"
-import { MiddlePanel } from "@/components/middle-panel"
-import { RightPanel } from "@/components/right-panel"
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
-import { useMediaQuery } from "@/hooks/use-media-query"
-import { Button } from "@/components/ui/button"
-import { Menu } from 'lucide-react'
+import * as React from "react";
+import { TopNav } from "@/components/top-nav";
+import { LeftPanel } from "@/components/left-panel";
+import { MiddlePanel } from "@/components/middle-panel";
+import { RightPanel } from "@/components/right-panel";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 
 export default function Page() {
-  const [leftPanelCollapsed, setLeftPanelCollapsed] = React.useState(false)
-  const isDesktop = useMediaQuery("(min-width: 768px)")
+  const [leftPanelCollapsed, setLeftPanelCollapsed] = React.useState(false);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   React.useEffect(() => {
-    setLeftPanelCollapsed(!isDesktop)
-  }, [isDesktop])
+    setLeftPanelCollapsed(!isDesktop);
+  }, [isDesktop]);
 
   return (
     <div className="flex min-h-screen">
-      <LeftPanel 
-        collapsed={leftPanelCollapsed} 
+      <LeftPanel
+        collapsed={leftPanelCollapsed}
         onToggle={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
       />
       <div className="flex flex-1 flex-col">
-        <TopNav title="AI SaaS Boilerplate" />
+        <TopNav title="AI SaaS Template" />
         <div className="flex flex-1 flex-col">
           {!isDesktop && (
             <div className="flex items-center border-b p-4">
@@ -41,7 +45,10 @@ export default function Page() {
               {/* Add any other mobile-specific controls here */}
             </div>
           )}
-          <ResizablePanelGroup direction={isDesktop ? "horizontal" : "vertical"} className="flex-1">
+          <ResizablePanelGroup
+            direction={isDesktop ? "horizontal" : "vertical"}
+            className="flex-1"
+          >
             <ResizablePanel defaultSize={isDesktop ? 60 : 100}>
               <MiddlePanel />
             </ResizablePanel>
@@ -55,6 +62,5 @@ export default function Page() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
