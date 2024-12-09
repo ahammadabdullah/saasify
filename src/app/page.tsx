@@ -44,7 +44,6 @@ export default function Page() {
               >
                 <Menu className="h-4 w-4" />
               </Button>
-              {/* Add any other mobile-specific controls here */}
             </div>
           )}
           <ResizablePanelGroup

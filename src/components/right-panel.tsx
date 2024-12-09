@@ -1,42 +1,85 @@
 "use client";
 
-import * as React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export function RightPanel() {
+import { Minimize2, X } from "lucide-react";
+import { VerticalTabs } from "./right-panel/VerticalTabs";
+import { HorizontalTabs } from "./right-panel/HorizontalTabs";
+
+function ExpandedPreview({
+  content,
+  onClose,
+}: {
+  content: React.ReactNode;
+  onClose: () => void;
+}) {
   return (
-    <div className="h-full border-l">
-      <Tabs defaultValue="preview" className="h-full">
-        <div className="flex items-center justify-between border-b px-4 py-2">
-          <TabsList>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-            <TabsTrigger value="code">Code</TabsTrigger>
-          </TabsList>
-          <Button variant="ghost" size="sm" className="hidden sm:inline-flex">
-            Toggle Split
+    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="relative w-full max-w-4xl h-[90vh] bg-background rounded-lg shadow-lg flex flex-col">
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-lg font-semibold">Expanded Preview</h2>
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <X className="h-4 w-4" />
           </Button>
         </div>
-        <TabsContent value="preview" className="h-[calc(100%-53px)]">
-          <ScrollArea className="h-full">
-            <div className="p-4">
-              <div className="rounded-lg border p-4">
-                <div className="text-sm">Preview content will appear here</div>
-              </div>
-            </div>
-          </ScrollArea>
-        </TabsContent>
-        <TabsContent value="code" className="h-[calc(100%-53px)]">
-          <ScrollArea className="h-full">
-            <div className="p-4">
-              <pre className="rounded-lg bg-muted p-4">
-                <code className="text-sm">{" // Code will appear here"}</code>
-              </pre>
-            </div>
-          </ScrollArea>
-        </TabsContent>
-      </Tabs>
+        <ScrollArea className="flex-grow p-6">
+          <div className="max-w-2xl mx-auto">{content}</div>
+        </ScrollArea>
+      </div>
+    </div>
+  );
+}
+export function RightPanel() {
+  const [isSplit, setIsSplit] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
+
+  const previewContent = (
+    <div className="rounded-lg border p-4">
+      <div className="text-sm">Preview content will appear here</div>
+    </div>
+  );
+
+  const codeContent = `
+// Sample code
+function greeting(name) {
+  return \`Hello, \${name}!\`;
+}
+
+console.log(greeting('World'));
+`;
+
+  return (
+    <div className="h-full border-l flex flex-col">
+      <div className="flex-1 overflow-hidden">
+        {isSplit ? (
+          <VerticalTabs
+            setIsSplit={setIsSplit}
+            isSplit={isSplit}
+            previewContent={previewContent}
+            codeContent={codeContent}
+            onExpand={() => setIsExpanded(true)}
+          />
+        ) : (
+          <HorizontalTabs
+            setIsSplit={setIsSplit}
+            isSplit={isSplit}
+            activeTab={activeTab}
+            setActiveTab={(tab) => setActiveTab(tab as "preview" | "code")}
+            previewContent={previewContent}
+            codeContent={codeContent}
+            onExpand={() => setIsExpanded(true)}
+          />
+        )}
+      </div>
+      {isExpanded && (
+        <ExpandedPreview
+          content={previewContent}
+          onClose={() => setIsExpanded(false)}
+        />
+      )}
     </div>
   );
 }
