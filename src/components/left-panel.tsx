@@ -1,37 +1,19 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Star,
-  ChevronDown,
-  Menu,
-  ChevronRight,
-  Navigation,
-} from "lucide-react";
+import { ChevronDown, ChevronRight, Menu } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { useMediaQuery } from "@/hooks/use-media-query";
-
-const navigation = [
-  {
-    name: "Nav Variants",
-    icon: Navigation,
-    children: [
-      { name: "Promotion", href: "/?banner=promotion" },
-      { name: "Notification", href: "/?banner=notification" },
-      { name: "Warning", href: "/?banner=warning" },
-      { name: "Information", href: "/?banner=information" },
-    ],
-    href: "/?banner=promotion",
-  },
-  // { name: "Settings", href: "/settings", icon: Settings },
-];
+import { navigationData } from "@/lib/navigations";
+import { Fragment } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface LeftPanelProps {
   collapsed: boolean;
@@ -40,111 +22,178 @@ interface LeftPanelProps {
 
 export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>(
+    {}
+  );
+
+  const toggleDropdown = (name: string) => {
+    setOpenDropdowns((prev) => ({ ...prev, [name]: !prev[name] }));
+  };
+
+  const renderNavItem = (item: any) => {
+    if (item.type === "Options" && item.children) {
+      return (
+        <div key={item.name} className="space-y-1">
+          {!collapsed && (
+            <div className="ml-4 space-y-1">
+              {item.children.map((child: any) => (
+                <Button
+                  key={child.name}
+                  variant="ghost"
+                  asChild
+                  className="w-full justify-start"
+                >
+                  <Link href={child.href}>{child.name}</Link>
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    } else if (item.children) {
+      return (
+        <Collapsible
+          key={item.name}
+          className="overflow-x-hidden"
+          open={openDropdowns[item.name]}
+          onOpenChange={() => toggleDropdown(item.name)}
+        >
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="ghost"
+              className={cn(
+                "w-full",
+                collapsed ? "justify-center" : "justify-start"
+              )}
+              onClick={() => {
+                if (collapsed) {
+                  onToggle();
+                }
+              }}
+            >
+              {item.icon && <item.icon className="h-4 w-4" />}
+              {!collapsed && (
+                <>
+                  <span className="ml-2">{item.name}</span>
+                  {openDropdowns[item.name] ? (
+                    <ChevronDown className="ml-auto h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="ml-auto h-4 w-4" />
+                  )}
+                </>
+              )}
+            </Button>
+          </CollapsibleTrigger>
+          {!collapsed && (
+            <CollapsibleContent className="ml-4 space-y-1">
+              {item.children.map((child: any) => (
+                <Button
+                  key={child.name}
+                  variant="ghost"
+                  asChild
+                  className="w-full justify-start"
+                >
+                  <Link href={child.href}>{child.name}</Link>
+                </Button>
+              ))}
+            </CollapsibleContent>
+          )}
+        </Collapsible>
+      );
+    } else {
+      return (
+        <Button
+          key={item.name}
+          variant="ghost"
+          asChild
+          className={cn(
+            "w-full",
+            collapsed ? "justify-center" : "justify-start"
+          )}
+        >
+          <Link href={item.href}>
+            {item.icon && <item.icon className="h-4 w-4" />}
+            {!collapsed && <span className="ml-2">{item.name}</span>}
+          </Link>
+        </Button>
+      );
+    }
+  };
 
   return (
     <div
       className={cn(
-        "flex h-screen flex-col justify-between border-r bg-background transition-all duration-300 ease-in-out",
+        "flex h-screen flex-col border-r bg-background transition-all duration-300 ease-in-out",
         collapsed ? (isDesktop ? "w-16" : "w-0") : "w-64",
         !isDesktop && "fixed left-0 top-0 z-40"
       )}
     >
-      <div className="flex flex-col">
-        <div className="flex h-16 items-center justify-between border-b px-4">
-          {!collapsed && (
-            <Link href="/" className="flex items-center space-x-2">
-              <Star className="h-6 w-6" />
-              <span className="text-lg font-bold">AI SaaS</span>
-            </Link>
+      <div className="flex h-16 shrink-0 items-center justify-between border-b px-4">
+        {!collapsed && (
+          <Link href="/" className="flex items-center space-x-2">
+            <span className="text-lg font-bold">AI SaaS</span>
+          </Link>
+        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggle}
+          className={cn(
+            collapsed && "ml-auto",
+            !isDesktop && collapsed && "fixed left-4 top-4 z-50"
           )}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onToggle}
-            className={cn(
-              collapsed && "ml-auto",
-              !isDesktop && collapsed && "fixed left-4 top-4 z-50"
-            )}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {collapsed ? (
-              <ChevronRight className="h-4 w-4" />
-            ) : (
-              <Menu className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-        <nav className="flex-1 overflow-y-auto p-2">
-          {navigation.map((item) =>
-            item.children ? (
-              <Collapsible className="overflow-x-hidden" key={item.name}>
-                <CollapsibleTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className={cn(
-                      "w-full",
-                      collapsed ? "justify-center" : "justify-start"
-                    )}
-                    onClick={() => {
-                      if (collapsed) {
-                        onToggle();
-                      }
-                    }}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    {!collapsed && (
-                      <>
-                        <span className="ml-2">{item.name}</span>
-                        <ChevronDown className="ml-auto h-4 w-4" />
-                      </>
-                    )}
-                  </Button>
-                </CollapsibleTrigger>
-                {!collapsed && (
-                  <CollapsibleContent className="ml-4 space-y-1">
-                    {item.children.map((child) => (
-                      <Button
-                        key={child.name}
-                        variant="ghost"
-                        asChild
-                        className="w-full justify-start"
-                      >
-                        <Link href={child.href}>{child.name}</Link>
-                      </Button>
-                    ))}
-                  </CollapsibleContent>
-                )}
-              </Collapsible>
-            ) : (
-              <Button
-                key={item.name}
-                variant="ghost"
-                asChild
-                className={cn(
-                  "w-full",
-                  collapsed ? "justify-center" : "justify-start"
-                )}
-              >
-                <Link href={item.href}>
-                  <item.icon className="h-4 w-4" />
-                  {!collapsed && <span className="ml-2">{item.name}</span>}
-                </Link>
-              </Button>
-            )
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {collapsed ? (
+            <ChevronRight className="h-4 w-4" />
+          ) : (
+            <Menu className="h-4 w-4" />
           )}
-        </nav>
+        </Button>
       </div>
-      <div className="border-t p-4">
+      <ScrollArea className="flex-grow px-1">
+        <div className="pr-2">
+          {navigationData.map((navItem) => (
+            <Fragment key={navItem.name}>
+              {(navItem.type === "cluster" || navItem.type === "Options") &&
+                !collapsed && (
+                  <h2 className="my-2 px-4 text-xl font-semibold">
+                    {navItem.name}
+                  </h2>
+                )}
+              {navItem.type === "cluster"
+                ? navItem?.items?.map(renderNavItem)
+                : renderNavItem(navItem)}
+              <div className="my-5" />
+            </Fragment>
+          ))}
+        </div>
+      </ScrollArea>
+      <div className="mt-auto border-t p-4">
         <Button
           size={collapsed ? "icon" : "default"}
           variant="secondary"
           className="w-full"
           title="Upgrade Plan"
         >
-          <Star className="h-4 w-4" />
-          {!collapsed && <span className="ml-2">Upgrade Plan</span>}
+          {!collapsed && <span>Upgrade Plan</span>}
         </Button>
       </div>
     </div>
   );
 }
+
+<style jsx global>{`
+  .flex-grow > div > div:last-child {
+    display: block !important;
+    width: 7px !important;
+    right: 2px;
+  }
+  .flex-grow > div > div:last-child > div {
+    background-color: hsl(var(--muted-foreground)) !important;
+    opacity: 0.2;
+  }
+  .flex-grow > div > div:last-child:hover > div {
+    opacity: 0.4;
+  }
+`}</style>;

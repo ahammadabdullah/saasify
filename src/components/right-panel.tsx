@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import * as React from "react";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function RightPanel() {
   return (
@@ -31,15 +31,12 @@ export function RightPanel() {
           <ScrollArea className="h-full">
             <div className="p-4">
               <pre className="rounded-lg bg-muted p-4">
-                <code className="text-sm">
-                  // Code will appear here
-                </code>
+                <code className="text-sm">{" // Code will appear here"}</code>
               </pre>
             </div>
           </ScrollArea>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
-

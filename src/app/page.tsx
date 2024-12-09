@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { TopNav } from "@/components/top-nav";
 import { LeftPanel } from "@/components/left-panel";
 import { MiddlePanel } from "@/components/middle-panel";
@@ -13,12 +12,13 @@ import {
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import { Suspense, useEffect, useState } from "react";
 
 export default function Page() {
-  const [leftPanelCollapsed, setLeftPanelCollapsed] = React.useState(false);
+  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  React.useEffect(() => {
+  useEffect(() => {
     setLeftPanelCollapsed(!isDesktop);
   }, [isDesktop]);
 
@@ -29,7 +29,9 @@ export default function Page() {
         onToggle={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
       />
       <div className="flex flex-1 flex-col">
-        <TopNav title="AI SaaS Template" />
+        <Suspense>
+          <TopNav title="AI SaaS Template" />
+        </Suspense>
         <div className="flex flex-1 flex-col">
           {!isDesktop && (
             <div className="flex items-center border-b p-4">
