@@ -101,7 +101,7 @@ export function TopNav({ title }: TopNavProps) {
   };
 
   return (
-    <div className="z-50 w-full border-b bg-background">
+    <div className="z-30 w-full border-b bg-background">
       <div className="flex h-16 items-center px-4">
         <div className="flex items-center space-x-4">
           <Link href="/" className="flex items-center space-x-2">

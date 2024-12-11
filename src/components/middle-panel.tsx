@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { MultiSelectFilter } from "./presets/multi-select-filter";
 
 interface Message {
   role: "user" | "assistant";
@@ -23,7 +24,7 @@ export function MiddlePanel() {
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [input, setInput] = React.useState("");
   const [model, setModel] = React.useState("gpt-4");
-
+  const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -42,7 +43,7 @@ export function MiddlePanel() {
     <div className="flex flex-col h-full">
       {/* Preset CTA Area */}
       <div className="border-b h-[180px] ">
-        <ScrollArea className=" h-full w-[425px] lg:w-full">
+        <ScrollArea className=" h-full w-screen lg:w-full">
           <div className="flex flex-col p-4 space-y-4 overflow-x-auto">
             {/* Search bars row */}
             <div className="flex space-x-4">
@@ -89,6 +90,17 @@ export function MiddlePanel() {
                   { value: "option3", label: "Option 3" },
                 ]}
                 className="w-[200px]"
+              />
+              <MultiSelectFilter
+                options={[
+                  { value: "option1", label: "Option 1" },
+                  { value: "option2", label: "Option 2" },
+                  { value: "option3", label: "Option 3" },
+                ]}
+                className="w-[200px]"
+                placeholder="Select options..."
+                value={selectedValues}
+                onValueChange={setSelectedValues}
               />
             </div>
 

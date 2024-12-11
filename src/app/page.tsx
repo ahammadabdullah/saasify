@@ -34,19 +34,6 @@ export default function Page() {
       <div className="flex flex-1 flex-col">
         <TopNav title="AI SaaS Template" />
         <div className="flex flex-1 flex-col">
-          {!isDesktop && (
-            <div className="flex items-center border-b p-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setLeftPanelCollapsed(false)}
-                className="mr-4"
-                aria-label="Open sidebar"
-              >
-                <Menu className="h-4 w-4" />
-              </Button>
-            </div>
-          )}
           <ResizablePanelGroup
             direction={isDesktop ? "horizontal" : "vertical"}
             className="flex-1"

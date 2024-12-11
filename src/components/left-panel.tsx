@@ -123,9 +123,9 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
   return (
     <div
       className={cn(
-        "flex h-screen flex-col border-r bg-background transition-all duration-300 ease-in-out",
+        "flex flex-col border-r bg-background transition-all duration-300 ease-in-out",
         collapsed ? (isDesktop ? "w-16" : "w-0") : "w-64",
-        !isDesktop && "fixed left-0 top-0 z-40"
+        !isDesktop && "fixed left-0 top-0 z-50 h-screen"
       )}
     >
       <div className="flex h-16 shrink-0 items-center justify-between border-b px-4">
