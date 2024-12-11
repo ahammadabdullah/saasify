@@ -63,7 +63,7 @@ export function RightPanel({
             ? `fixed top-0 right-0 h-full z-50 transition-transform duration-300 ${
                 isVisible ? "translate-x-0" : "translate-x-full"
               }`
-            : "lg:flex lg:h-auto lg:relative"
+            : "lg:flex lg:h-full lg:relative"
         } w-full lg:w-auto lg:border-l bg-background flex flex-col`}
       >
         <div className="flex-1 overflow-hidden">
