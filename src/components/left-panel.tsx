@@ -179,7 +179,7 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
               className="w-full"
               title="Upgrade Plan"
             >
-              {collapsed ? <></> : <span>Upgrade Plan</span>}
+              {!collapsed && <span>Upgrade Plan</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent
