@@ -1,10 +1,7 @@
 "use client";
 
 import React from "react";
-import Split from "react-split";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ExpandablePreview } from "./ExpandablePreview";
-import { CopyButton } from "./CopyButton";
+
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import {
@@ -35,7 +32,9 @@ export function VerticalTabs({
         <ResizablePanel defaultSize={55}>
           <div className="flex flex-col min-h-[50px] overflow-hidden">
             <div className="border-b flex justify-between">
-              <div className="font-medium px-2 py-1">Preview</div>
+              <div className="font-medium px-2 py-1 bg-background text-primary rounded-lg border-4 border-accent m-2 text-sm">
+                Preview
+              </div>
               <div className="flex items-center justify-between">
                 <div className="flex-1" />
                 <Button
@@ -47,7 +46,7 @@ export function VerticalTabs({
                 </Button>
               </div>
             </div>
-            <div className="flex-1">
+            <div className="flex-1 p-2">
               {previewContent || <span>Placeholder Content</span>}
             </div>
           </div>
@@ -55,12 +54,15 @@ export function VerticalTabs({
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={45}>
           <div className="flex flex-col min-h-[50px] overflow-hidden">
-            <div className="border-b px-2 py-1 font-medium">Code</div>
-            <div className="flex-1">
+            <div className="font-medium px-2 py-1 bg-background text-primary rounded-lg border-4 border-accent m-2 text-sm w-max">
+              Code
+            </div>
+            <div className="flex-1 p-2">
               <SyntaxHighlighter
                 language="tsx"
                 style={vscDarkPlus}
                 showLineNumbers
+                customStyle={{ borderRadius: "0.5rem" }}
               >
                 {codeContent || "Placeholder Code"}
               </SyntaxHighlighter>

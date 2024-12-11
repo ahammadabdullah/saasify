@@ -66,6 +66,7 @@ export function HorizontalTabs({
                 language="tsx"
                 style={vscDarkPlus}
                 showLineNumbers
+                customStyle={{ borderRadius: "0.5rem" }}
               >
                 {codeContent}
               </SyntaxHighlighter>
