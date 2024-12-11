@@ -16,6 +16,7 @@ import { Fragment } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { useSearchParams } from "next/navigation";
+import Cta from "./top-nav/CTA";
 
 interface LeftPanelProps {
   collapsed: boolean;
@@ -154,7 +155,7 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
         !isDesktop && "fixed left-0 top-0 z-50 h-screen"
       )}
     >
-      <div className="flex h-16 shrink-0 items-center justify-between border-b px-4">
+      <div className="flex h-16 shrink-0 items-center justify-between border-b px-4 py-[32px]">
         {!collapsed && (
           <Link href="/" className="flex items-center space-x-2">
             <span className="text-lg font-bold">AI SaaS</span>
@@ -171,7 +172,9 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? (
-            <ChevronRight className="h-4 w-4" />
+            <span className="bg-background text-foreground p-4 rounded-lg">
+              <ChevronRight className="h-4 w-4 " />
+            </span>
           ) : (
             <Menu className="h-4 w-4" />
           )}
@@ -195,6 +198,14 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
           ))}
         </div>
       </ScrollArea>
+      <div
+        className={cn(
+          "transition-all duration-1000 ease-in-out flex justify-center gap-6 lg:hidden",
+          collapsed ? "hidden" : "w-64 "
+        )}
+      >
+        <Cta />
+      </div>
       <div className="mt-auto lg:border-t p-4">
         <Popover>
           <PopoverTrigger asChild>
