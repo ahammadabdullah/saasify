@@ -16,7 +16,10 @@ import { Fragment } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { useSearchParams } from "next/navigation";
-import Cta from "./top-nav/CTA";
+import dynamic from "next/dynamic";
+const Cta = dynamic(() => import("./top-nav/CTA").then((mod) => mod.default), {
+  ssr: false,
+});
 
 interface LeftPanelProps {
   collapsed: boolean;
@@ -35,6 +38,7 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
   };
 
   const isActive = (href: string) => {
+    if (typeof window === "undefined") return false;
     const url = new URL(href, window.location.origin);
     const queryParams = new URLSearchParams(url.search);
     return Array.from(queryParams.entries()).every(

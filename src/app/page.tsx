@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { LeftPanel } from "@/components/left-panel";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftFromLine } from "lucide-react";
 import { MiddlePanelSkeleton } from "@/components/Skeletons/middle-panel-skeleton";
@@ -14,6 +14,11 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { TopNavSkeleton } from "@/components/Skeletons/top-nav-skeleton";
+
+// const LeftPanel = dynamic(
+//   () => import("@/components/left-panel").then((mod) => mod.LeftPanel),
+//   { loading: () => null, ssr: false }
+// );
 
 const TopNav = dynamic(
   () => import("@/components/top-nav").then((mod) => mod.TopNav),
@@ -60,10 +65,12 @@ export default function Page() {
 
   return (
     <div className="flex min-h-screen">
-      <LeftPanel
-        collapsed={leftPanelCollapsed}
-        onToggle={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
-      />
+      <Suspense>
+        <LeftPanel
+          collapsed={leftPanelCollapsed}
+          onToggle={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
+        />
+      </Suspense>
       <div className="flex flex-1 flex-col">
         <TopNav title="AI SaaS Template" />
         <div className="flex flex-1 flex-col">
