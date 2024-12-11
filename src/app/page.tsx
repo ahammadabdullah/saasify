@@ -13,10 +13,11 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { TopNavSkeleton } from "@/components/Skeletons/top-nav-skeleton";
 
 const TopNav = dynamic(
   () => import("@/components/top-nav").then((mod) => mod.TopNav),
-  { ssr: false }
+  { loading: () => <TopNavSkeleton />, ssr: false }
 );
 
 const MiddlePanel = dynamic(
