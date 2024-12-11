@@ -1,6 +1,5 @@
 "use client";
-
-import { TopNav } from "@/components/top-nav";
+import dynamic from "next/dynamic";
 import { LeftPanel } from "@/components/left-panel";
 import { MiddlePanel } from "@/components/middle-panel";
 import { RightPanel } from "@/components/right-panel";
@@ -12,7 +11,11 @@ import {
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+const TopNav = dynamic(
+  () => import("@/components/top-nav").then((mod) => mod.TopNav),
+  { ssr: false }
+);
 
 export default function Page() {
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
@@ -29,9 +32,7 @@ export default function Page() {
         onToggle={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
       />
       <div className="flex flex-1 flex-col">
-        <Suspense>
-          <TopNav title="AI SaaS Template" />
-        </Suspense>
+        <TopNav title="AI SaaS Template" />
         <div className="flex flex-1 flex-col">
           {!isDesktop && (
             <div className="flex items-center border-b p-4">

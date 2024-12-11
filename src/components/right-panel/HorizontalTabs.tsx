@@ -63,7 +63,7 @@ export function HorizontalTabs({
             <div className="p-2 relative">
               <CopyButton text={codeContent} />
               <SyntaxHighlighter
-                language="javascript"
+                language="tsx"
                 style={vscDarkPlus}
                 showLineNumbers
               >

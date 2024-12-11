@@ -41,9 +41,9 @@ export function MiddlePanel() {
   return (
     <div className="flex flex-col h-full">
       {/* Preset CTA Area */}
-      <div className="border-b h-[180px]">
-        <ScrollArea className="w-full h-full">
-          <div className="flex flex-col p-4 space-y-4 min-w-[800px]">
+      <div className="border-b h-[180px] ">
+        <ScrollArea className=" h-full w-[425px] lg:w-full">
+          <div className="flex flex-col p-4 space-y-4 overflow-x-auto">
             {/* Search bars row */}
             <div className="flex space-x-4">
               <SearchInput

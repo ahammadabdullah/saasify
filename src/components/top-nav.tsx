@@ -32,7 +32,7 @@ interface Notification {
 export function TopNav({ title }: TopNavProps) {
   const { theme, setTheme } = useTheme();
   const searchParams = useSearchParams();
-  const [showBanner, setShowBanner] = useState(true);
+  const [showBanner, setShowBanner] = useState(false);
   const [bannerAlign, setBannerAlign] = useState<"left" | null | "centered">(
     "left"
   );
@@ -52,7 +52,9 @@ export function TopNav({ title }: TopNavProps) {
     { id: 2, message: "Your subscription will renew soon.", time: "1 day ago" },
     { id: 3, message: "Check out our latest blog post.", time: "3 days ago" },
   ]);
-
+  useEffect(() => {
+    setShowBanner(true);
+  }, []);
   useEffect(() => {
     const banner = searchParams.get("banner");
     const bannerAlign = searchParams.get("banner-align");

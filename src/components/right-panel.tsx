@@ -35,24 +35,19 @@ export function RightPanel() {
   const [isSplit, setIsSplit] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
-
+  const [codeContent, setCodeContent] = useState(`// Sample code
+    function greeting(name) {
+      return \`Hello, \${name}!\`;
+    }
+    console.log(greeting('World'));`);
   const previewContent = (
     <div className="rounded-lg border p-4">
       <div className="text-sm">Preview content will appear here</div>
     </div>
   );
 
-  const codeContent = `
-// Sample code
-function greeting(name) {
-  return \`Hello, \${name}!\`;
-}
-
-console.log(greeting('World'));
-`;
-
   return (
-    <div className="h-full border-l flex flex-col">
+    <div className="hidden lg:flex h-full border-l  flex-col ">
       <div className="flex-1 overflow-hidden">
         {isSplit ? (
           <VerticalTabs
