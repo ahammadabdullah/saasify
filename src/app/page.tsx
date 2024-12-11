@@ -2,22 +2,31 @@
 
 import dynamic from "next/dynamic";
 import { LeftPanel } from "@/components/left-panel";
-import { MiddlePanel } from "@/components/middle-panel";
-import { RightPanel } from "@/components/right-panel";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftFromLine } from "lucide-react";
+import { MiddlePanelSkeleton } from "@/components/Skeletons/middle-panel-skeleton";
+import { RightPanelSkeleton } from "@/components/Skeletons/right-panel-skeleton";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { useMediaQuery } from "@/hooks/use-media-query";
-
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftFromLine } from "lucide-react";
 
 const TopNav = dynamic(
   () => import("@/components/top-nav").then((mod) => mod.TopNav),
   { ssr: false }
+);
+
+const MiddlePanel = dynamic(
+  () => import("@/components/middle-panel").then((mod) => mod.MiddlePanel),
+  { loading: () => <MiddlePanelSkeleton />, ssr: false }
+);
+
+const RightPanel = dynamic(
+  () => import("@/components/right-panel").then((mod) => mod.RightPanel),
+  { loading: () => <RightPanelSkeleton />, ssr: false }
 );
 
 export default function Page() {
@@ -27,10 +36,25 @@ export default function Page() {
   const [isRightPanelVisible, setIsRightPanelVisible] = useState(
     !isSmallScreen
   );
+  const [middlePanelLoaded, setMiddlePanelLoaded] = useState(false);
+  const [rightPanelLoaded, setRightPanelLoaded] = useState(false);
 
   useEffect(() => {
     setLeftPanelCollapsed(!isDesktop);
   }, [isDesktop]);
+
+  useEffect(() => {
+    if (middlePanelLoaded && !rightPanelLoaded) {
+      setRightPanelLoaded(true);
+    }
+  }, [middlePanelLoaded, rightPanelLoaded]);
+
+  useEffect(() => {
+    if (!middlePanelLoaded) {
+      setMiddlePanelLoaded(true);
+    }
+  }, [middlePanelLoaded]);
+
   const togglePanel = () => setIsRightPanelVisible(!isRightPanelVisible);
 
   return (
@@ -44,7 +68,7 @@ export default function Page() {
         <div className="flex flex-1 flex-col">
           <ResizablePanelGroup direction={"horizontal"} className="flex-1">
             <ResizablePanel defaultSize={isDesktop ? 60 : 100}>
-              <MiddlePanel />
+              {middlePanelLoaded && <MiddlePanel />}
             </ResizablePanel>
             {isDesktop && <ResizableHandle withHandle />}
             <ResizablePanel
@@ -52,11 +76,13 @@ export default function Page() {
               minSize={isDesktop ? 30 : 0}
               maxSize={isDesktop ? 70 : 0}
             >
-              <RightPanel
-                isSmallScreen={isSmallScreen}
-                isVisible={isRightPanelVisible}
-                setIsVisible={setIsRightPanelVisible}
-              />
+              {rightPanelLoaded && (
+                <RightPanel
+                  isSmallScreen={isSmallScreen}
+                  isVisible={isRightPanelVisible}
+                  setIsVisible={setIsRightPanelVisible}
+                />
+              )}
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
