@@ -14,6 +14,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { navigationData } from "@/lib/navigations";
 import { Fragment } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 interface LeftPanelProps {
   collapsed: boolean;
@@ -157,7 +158,7 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
             <Fragment key={navItem.name}>
               {(navItem.type === "cluster" || navItem.type === "Options") &&
                 !collapsed && (
-                  <h2 className="my-2 px-4 text-xl font-semibold">
+                  <h2 className="my-2 px-4 text-base font-semibold opacity-50">
                     {navItem.name}
                   </h2>
                 )}
@@ -169,15 +170,32 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
           ))}
         </div>
       </ScrollArea>
-      <div className="mt-auto border-t p-4">
-        <Button
-          size={collapsed ? "icon" : "default"}
-          variant="secondary"
-          className="w-full"
-          title="Upgrade Plan"
-        >
-          {!collapsed && <span>Upgrade Plan</span>}
-        </Button>
+      <div className="mt-auto lg:border-t p-4">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              size={collapsed ? "icon" : "default"}
+              variant="secondary"
+              className="w-full"
+              title="Upgrade Plan"
+            >
+              {collapsed ? <></> : <span>Upgrade Plan</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className={`w-48 ${collapsed ? "" : "hidden"} mb-5 `}
+            align="start"
+            side={"right"}
+          >
+            <div className="flex flex-col space-y-2">
+              <h3 className="font-semibold">Upgrade Plan</h3>
+              <p className="text-sm text-muted-foreground">
+                Unlock premium features and increase your productivity.
+              </p>
+              <Button size="sm">View Plans</Button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );

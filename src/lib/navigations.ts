@@ -58,18 +58,18 @@ export const navigationData = [
     name: "Simple Dropdown",
     icon: Star,
     children: [
-      { name: "Option 1", href: "/option1" },
-      { name: "Option 2", href: "/option2" },
+      { name: "Option 1", href: "/?option1" },
+      { name: "Option 2", href: "/?option2" },
     ],
-    href: "/options",
+    href: "/?options",
   },
   {
     type: "Options",
     name: "Options",
-    href: "/options",
+    href: "/?options",
     children: [
-      { name: "Option 1", href: "/option1" },
-      { name: "Option 2", href: "/option2" },
+      { name: "Option 1", href: "/?option1" },
+      { name: "Option 2", href: "/?option2" },
     ],
   },
 ];

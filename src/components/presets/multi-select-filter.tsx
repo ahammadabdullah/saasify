@@ -26,7 +26,7 @@ const multiSelectFilterVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-white border border-input hover:bg-accent hover:text-accent-foreground",
+          "bg-white border border-input hover:bg-accent hover:text-accent-foreground text-primary dark:text-accent",
       },
       size: {
         default: "h-9 px-4 py-2",

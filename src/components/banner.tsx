@@ -10,7 +10,7 @@ import { useState } from "react";
 const bannerVariants = cva("flex items-center justify-between text-sm", {
   variants: {
     variant: {
-      promotion: "bg-accent text-accent-foreground",
+      promotion: "bg-chart-2 text-accent-foreground",
       warning: "bg-destructive text-destructive-foreground",
       notification: "bg-primary text-primary-foreground",
       information: "bg-muted text-muted-foreground",
