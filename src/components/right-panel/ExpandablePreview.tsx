@@ -28,7 +28,7 @@ export function ExpandablePreview({
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-4 top-4"
+              className="absolute right-4 top-2"
               onClick={onExpand}
             >
               <Maximize2 className="h-4 w-4" />

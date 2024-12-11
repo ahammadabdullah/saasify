@@ -1,4 +1,5 @@
 "use client";
+
 import dynamic from "next/dynamic";
 import { LeftPanel } from "@/components/left-panel";
 import { MiddlePanel } from "@/components/middle-panel";
@@ -9,9 +10,11 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftFromLine } from "lucide-react";
+
 const TopNav = dynamic(
   () => import("@/components/top-nav").then((mod) => mod.TopNav),
   { ssr: false }
@@ -20,10 +23,15 @@ const TopNav = dynamic(
 export default function Page() {
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const isSmallScreen = !isDesktop;
+  const [isRightPanelVisible, setIsRightPanelVisible] = useState(
+    !isSmallScreen
+  );
 
   useEffect(() => {
     setLeftPanelCollapsed(!isDesktop);
   }, [isDesktop]);
+  const togglePanel = () => setIsRightPanelVisible(!isRightPanelVisible);
 
   return (
     <div className="flex min-h-screen">
@@ -34,22 +42,33 @@ export default function Page() {
       <div className="flex flex-1 flex-col">
         <TopNav title="AI SaaS Template" />
         <div className="flex flex-1 flex-col">
-          <ResizablePanelGroup
-            direction={isDesktop ? "horizontal" : "vertical"}
-            className="flex-1"
-          >
+          <ResizablePanelGroup direction={"horizontal"} className="flex-1">
             <ResizablePanel defaultSize={isDesktop ? 60 : 100}>
               <MiddlePanel />
             </ResizablePanel>
             {isDesktop && <ResizableHandle withHandle />}
-            {isDesktop && (
-              <ResizablePanel defaultSize={40} minSize={30} maxSize={60}>
-                <RightPanel />
-              </ResizablePanel>
-            )}
+            <ResizablePanel
+              defaultSize={isDesktop ? 40 : 0}
+              minSize={isDesktop ? 30 : 0}
+              maxSize={isDesktop ? 70 : 0}
+            >
+              <RightPanel
+                isSmallScreen={isSmallScreen}
+                isVisible={isRightPanelVisible}
+                setIsVisible={setIsRightPanelVisible}
+              />
+            </ResizablePanel>
           </ResizablePanelGroup>
         </div>
       </div>
+      {isSmallScreen && !isRightPanelVisible && (
+        <Button
+          onClick={togglePanel}
+          className="fixed right-2 top-1/2 transform -translate-y-1/2 z-40 bg-primary text-primary-foreground"
+        >
+          <ArrowLeftFromLine />
+        </Button>
+      )}
     </div>
   );
 }

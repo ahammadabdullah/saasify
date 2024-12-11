@@ -3,11 +3,9 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-import { Minimize2, X } from "lucide-react";
+import { ArrowRightFromLine, X } from "lucide-react";
 import { VerticalTabs } from "./right-panel/VerticalTabs";
 import { HorizontalTabs } from "./right-panel/HorizontalTabs";
-
 function ExpandedPreview({
   content,
   onClose,
@@ -31,7 +29,15 @@ function ExpandedPreview({
     </div>
   );
 }
-export function RightPanel() {
+export function RightPanel({
+  isSmallScreen,
+  isVisible,
+  setIsVisible,
+}: {
+  isSmallScreen: boolean;
+  isVisible: boolean;
+  setIsVisible: (isVisible: boolean) => void;
+}) {
   const [isSplit, setIsSplit] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
@@ -46,35 +52,59 @@ export function RightPanel() {
     </div>
   );
 
+  const togglePanel = () => setIsVisible(!isVisible);
+
   return (
-    <div className="hidden lg:flex h-full border-l  flex-col ">
-      <div className="flex-1 overflow-hidden">
-        {isSplit ? (
-          <VerticalTabs
-            setIsSplit={setIsSplit}
-            isSplit={isSplit}
-            previewContent={previewContent}
-            codeContent={codeContent}
-            onExpand={() => setIsExpanded(true)}
-          />
-        ) : (
-          <HorizontalTabs
-            setIsSplit={setIsSplit}
-            isSplit={isSplit}
-            activeTab={activeTab}
-            setActiveTab={(tab) => setActiveTab(tab as "preview" | "code")}
-            previewContent={previewContent}
-            codeContent={codeContent}
-            onExpand={() => setIsExpanded(true)}
+    <>
+      {/* Right Panel */}
+      <div
+        className={`lg:static ${
+          isSmallScreen
+            ? `fixed top-0 right-0 h-full z-50 transition-transform duration-300 ${
+                isVisible ? "translate-x-0" : "translate-x-full"
+              }`
+            : "lg:flex lg:h-auto lg:relative"
+        } w-full lg:w-auto lg:border-l bg-background flex flex-col`}
+      >
+        <div className="flex-1 overflow-hidden">
+          {isSplit ? (
+            <VerticalTabs
+              setIsSplit={setIsSplit}
+              isSplit={isSplit}
+              previewContent={previewContent}
+              codeContent={codeContent}
+              onExpand={() => setIsExpanded(true)}
+            />
+          ) : (
+            <HorizontalTabs
+              setIsSplit={setIsSplit}
+              isSplit={isSplit}
+              activeTab={activeTab}
+              setActiveTab={(tab) => setActiveTab(tab as "preview" | "code")}
+              previewContent={previewContent}
+              codeContent={codeContent}
+              onExpand={() => setIsExpanded(true)}
+            />
+          )}
+        </div>
+
+        {/* Close Button for Small Screen */}
+        {isSmallScreen && (
+          <Button
+            onClick={togglePanel}
+            className="fixed left-2 top-1/2 transform -translate-y-1/2 z-40 bg-primary text-primary-foreground"
+          >
+            <ArrowRightFromLine />
+          </Button>
+        )}
+
+        {isExpanded && (
+          <ExpandedPreview
+            content={previewContent}
+            onClose={() => setIsExpanded(false)}
           />
         )}
       </div>
-      {isExpanded && (
-        <ExpandedPreview
-          content={previewContent}
-          onClose={() => setIsExpanded(false)}
-        />
-      )}
-    </div>
+    </>
   );
 }
