@@ -15,6 +15,7 @@ import { navigationData } from "@/lib/navigations";
 import { Fragment } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { useSearchParams } from "next/navigation";
 
 interface LeftPanelProps {
   collapsed: boolean;
@@ -26,9 +27,18 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>(
     {}
   );
+  const searchParams = useSearchParams();
 
   const toggleDropdown = (name: string) => {
     setOpenDropdowns((prev) => ({ ...prev, [name]: !prev[name] }));
+  };
+
+  const isActive = (href: string) => {
+    const url = new URL(href, window.location.origin);
+    const queryParams = new URLSearchParams(url.search);
+    return Array.from(queryParams.entries()).every(
+      ([key, value]) => searchParams.get(key) === value
+    );
   };
 
   const renderNavItem = (item: any) => {
@@ -37,16 +47,22 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
         <div key={item.name} className="space-y-1">
           {!collapsed && (
             <div className="ml-4 space-y-1">
-              {item.children.map((child: any) => (
-                <Button
-                  key={child.name}
-                  variant="ghost"
-                  asChild
-                  className="w-full justify-start"
-                >
-                  <Link href={child.href}>{child.name}</Link>
-                </Button>
-              ))}
+              {item.children.map((child: any) => {
+                const active = isActive(child.href);
+                return (
+                  <Button
+                    key={child.name}
+                    variant="ghost"
+                    asChild
+                    className={cn(
+                      "w-full justify-start",
+                      active && "bg-muted animate-active-state"
+                    )}
+                  >
+                    <Link href={child.href}>{child.name}</Link>
+                  </Button>
+                );
+              })}
             </div>
           )}
         </div>
@@ -64,7 +80,8 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
               variant="ghost"
               className={cn(
                 "w-full",
-                collapsed ? "justify-center" : "justify-start"
+                collapsed ? "justify-center" : "justify-start",
+                isActive(item.href) && "bg-muted animate-active-state"
               )}
               onClick={() => {
                 if (collapsed) {
@@ -87,21 +104,28 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
           </CollapsibleTrigger>
           {!collapsed && (
             <CollapsibleContent className="ml-4 space-y-1">
-              {item.children.map((child: any) => (
-                <Button
-                  key={child.name}
-                  variant="ghost"
-                  asChild
-                  className="w-full justify-start"
-                >
-                  <Link href={child.href}>{child.name}</Link>
-                </Button>
-              ))}
+              {item.children.map((child: any) => {
+                const active = isActive(child.href);
+                return (
+                  <Button
+                    key={child.name}
+                    variant="ghost"
+                    asChild
+                    className={cn(
+                      "w-full justify-start",
+                      active && "bg-muted animate-active-state"
+                    )}
+                  >
+                    <Link href={child.href}>{child.name}</Link>
+                  </Button>
+                );
+              })}
             </CollapsibleContent>
           )}
         </Collapsible>
       );
     } else {
+      const active = isActive(item.href);
       return (
         <Button
           key={item.name}
@@ -109,7 +133,8 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
           asChild
           className={cn(
             "w-full",
-            collapsed ? "justify-center" : "justify-start"
+            collapsed ? "justify-center" : "justify-start",
+            active && "bg-muted animate-active-state"
           )}
         >
           <Link href={item.href}>

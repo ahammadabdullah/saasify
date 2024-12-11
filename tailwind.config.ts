@@ -56,6 +56,22 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      animation: {
+        "text-anim": "textAnim 0.4s ease-out",
+        "active-state": "activeState 0.4s ease-out",
+      },
+      keyframes: {
+        textAnim: {
+          "0%": { transform: "translateX(0)", opacity: "0" },
+          "50%": { transform: "translateX(5px)", opacity: "1" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        activeState: {
+          "0%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.05)", opacity: "0.8" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
