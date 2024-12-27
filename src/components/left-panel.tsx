@@ -41,9 +41,11 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
     if (typeof window === "undefined") return false;
     const url = new URL(href, window.location.origin);
     const queryParams = new URLSearchParams(url.search);
-    return Array.from(queryParams.entries()).every(
+    const pathnameMatches = window.location.pathname === url.pathname;
+    const queryMatches = Array.from(queryParams.entries()).every(
       ([key, value]) => searchParams.get(key) === value
     );
+    return pathnameMatches && queryMatches;
   };
 
   const renderNavItem = (item: any) => {
@@ -162,7 +164,7 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
       <div className="flex h-16 shrink-0 items-center justify-between border-b px-4 py-[32px]">
         {!collapsed && (
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-lg font-bold">AI SaaS</span>
+            <span className="text-lg font-bold">SaaSify</span>
           </Link>
         )}
         <Button
@@ -184,7 +186,7 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
           )}
         </Button>
       </div>
-      <ScrollArea className="flex-grow px-1">
+      <ScrollArea className="flex-grow px-1 mt-5">
         <div className="pr-2">
           {navigationData.map((navItem) => (
             <Fragment key={navItem.name}>
@@ -197,7 +199,7 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
               {navItem.type === "cluster"
                 ? navItem?.items?.map(renderNavItem)
                 : renderNavItem(navItem)}
-              <div className="my-5" />
+              {/* <div className="my-5" /> */}
             </Fragment>
           ))}
         </div>

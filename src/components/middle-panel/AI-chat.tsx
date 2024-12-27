@@ -38,7 +38,7 @@ const AiChat = () => {
   };
 
   return (
-    <div className="!h-[300px] md:h-[200px] flex flex-col">
+    <div className="flex flex-col h-full">
       <ResizablePanelGroup direction="vertical">
         {/* Chat Messages Panel */}
         <ResizablePanel>
@@ -65,7 +65,7 @@ const AiChat = () => {
         </ResizablePanel>
         <ResizableHandle withHandle />
         {/* Input Panel */}
-        <ResizablePanel defaultValue={50} minSize={30}>
+        <ResizablePanel defaultValue={30} minSize={20}>
           <form onSubmit={handleSubmit} className="p-2 border-t h-full">
             <div className="relative flex flex-col h-full">
               <Select value={model} onValueChange={setModel}>
