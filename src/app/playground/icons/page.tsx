@@ -1,14 +1,11 @@
 "use client";
 
-import * as React from "react";
-import { TopNav } from "@/components/top-nav";
-import { LeftPanel } from "@/components/left-panel";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
-import { Menu, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { iconList } from "@/lib/iconList";
+import { useState } from "react";
 
 // Convert PascalCase to kebab-case
 function toKebabCase(str: string) {
@@ -19,14 +16,8 @@ function toKebabCase(str: string) {
 }
 
 export default function IconsPage() {
-  const [leftPanelCollapsed, setLeftPanelCollapsed] = React.useState(false);
-  const [copiedIcon, setCopiedIcon] = React.useState<string | null>(null);
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const [copiedIcon, setCopiedIcon] = useState<string | null>(null);
   const { toast } = useToast();
-
-  React.useEffect(() => {
-    setLeftPanelCollapsed(!isDesktop);
-  }, [isDesktop]);
 
   const copyToClipboard = (iconName: string) => {
     const code = `import { ${iconName} } from 'lucide-react'`;
