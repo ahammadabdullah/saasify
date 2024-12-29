@@ -21,7 +21,7 @@ export function ExpandablePreview({
 }: ExpandablePreviewProps) {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
-      <div className="max-w-2xl w-full mx-auto">{content}</div>
+      <div className=" w-full mx-auto">{content}</div>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

@@ -51,9 +51,9 @@ export function HorizontalTabs({
         </div>
       </div>
       <div className="flex-1 overflow-hidden">
-        <TabsContent value="preview" className="h-full m-0">
+        <TabsContent value="preview" className="h-full m-0 w-full">
           <ScrollArea className="h-full">
-            <div className="p-2">
+            <div className="p-2 ">
               <ExpandablePreview content={previewContent} onExpand={onExpand} />
             </div>
           </ScrollArea>

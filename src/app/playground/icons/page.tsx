@@ -7,7 +7,6 @@ import { useToast } from "@/hooks/use-toast";
 import { iconList } from "@/lib/iconList";
 import { useState } from "react";
 
-// Convert PascalCase to kebab-case
 function toKebabCase(str: string) {
   return str
     .replace(/([a-z0-9])([A-Z])/g, "$1-$2")

@@ -41,7 +41,7 @@ const AiChat = () => {
     <div className="flex flex-col h-full">
       <ResizablePanelGroup direction="vertical">
         {/* Chat Messages Panel */}
-        <ResizablePanel>
+        <ResizablePanel defaultValue={80} maxSize={80}>
           <div className="flex-grow overflow-auto p-2">
             {messages.map((message, index) => (
               <div
@@ -65,7 +65,7 @@ const AiChat = () => {
         </ResizablePanel>
         <ResizableHandle withHandle />
         {/* Input Panel */}
-        <ResizablePanel defaultValue={30} minSize={20}>
+        <ResizablePanel defaultSize={20} maxSize={40} minSize={20}>
           <form onSubmit={handleSubmit} className="p-2 border-t h-full">
             <div className="relative flex flex-col h-full">
               <Select value={model} onValueChange={setModel}>

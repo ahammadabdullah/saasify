@@ -1,4 +1,11 @@
-import { Home, Images, LayoutDashboard, Navigation, Star } from "lucide-react";
+import {
+  Bot,
+  Home,
+  Images,
+  LayoutDashboard,
+  Navigation,
+  Star,
+} from "lucide-react";
 
 export const navigationData = [
   {
@@ -14,6 +21,16 @@ export const navigationData = [
     children: [
       { name: "Dashboard 1", href: "/playground/?dashboard" },
       { name: "Dashboard 2", href: "/playground/?dashboard" },
+    ],
+    href: "/?options",
+  },
+  {
+    type: "dropdown",
+    name: "Ai Assistant",
+    icon: Bot,
+    children: [
+      { name: "layout 1", href: "/playground/chat/?layout=layout1" },
+      { name: "layout 2", href: "/playground/chat/?layout=layout2" },
     ],
     href: "/?options",
   },
