@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -10,12 +10,12 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { navigationData } from "@/lib/navigations";
 import { Fragment } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 const Cta = dynamic(() => import("./top-nav/CTA").then((mod) => mod.default), {
   ssr: false,
@@ -31,25 +31,29 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>(
     {}
   );
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const toggleDropdown = (name: string) => {
     setOpenDropdowns((prev) => ({ ...prev, [name]: !prev[name] }));
   };
+  const isActive = useMemo(
+    () => (href: string) => {
+      const url = new URL(href, "http://localhost");
+      const queryParams = new URLSearchParams(url.search);
 
-  const isActive = (href: string) => {
-    if (typeof window === "undefined") return false;
-    const url = new URL(href, window.location.origin);
-    const queryParams = new URLSearchParams(url.search);
-    const pathnameMatches = window.location.pathname === url.pathname;
-    const queryMatches = Array.from(queryParams.entries()).every(
-      ([key, value]) => searchParams.get(key) === value
-    );
-    return pathnameMatches && queryMatches;
-  };
+      const pathnameMatches = pathname === url.pathname;
+      const queryMatches = Array.from(queryParams.entries()).every(
+        ([key, value]) => searchParams.get(key) === value
+      );
+
+      return pathnameMatches && queryMatches;
+    },
+    [pathname, searchParams]
+  );
 
   const renderNavItem = (item: any) => {
-    if (item.type === "Options" && item.children) {
+    if (item.type === "page" && item.children) {
       return (
         <div key={item.name} className="space-y-1">
           {!collapsed && (
@@ -63,10 +67,13 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
                     asChild
                     className={cn(
                       "w-full justify-start",
-                      active && "bg-muted animate-active-state"
+                      active && "bg-muted animate-active-state "
                     )}
                   >
-                    <Link href={child.href}>{child.name}</Link>
+                    <Link className="flex items-center" href={child.href}>
+                      {child.icon && <child.icon className="h-4 w-4 mr-2" />}
+                      {child.name}
+                    </Link>
                   </Button>
                 );
               })}
@@ -123,7 +130,10 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
                       active && "bg-muted animate-active-state"
                     )}
                   >
-                    <Link href={child.href}>{child.name}</Link>
+                    <Link href={child.href}>
+                      {child.icon && <child.icon className="h-4 w-4 mr-2" />}
+                      {child.name}
+                    </Link>
                   </Button>
                 );
               })}
@@ -145,7 +155,7 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
           )}
         >
           <Link href={item.href}>
-            {item.icon && <item.icon className="h-4 w-4" />}
+            {item.icon && <item.icon className="h-4 w-4 mr-2" />}
             {!collapsed && <span className="ml-2">{item.name}</span>}
           </Link>
         </Button>
@@ -190,7 +200,7 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
         <div className="pr-2">
           {navigationData.map((navItem) => (
             <Fragment key={navItem.name}>
-              {(navItem.type === "cluster" || navItem.type === "Options") &&
+              {(navItem.type === "cluster" || navItem.type === "page") &&
                 !collapsed && (
                   <h2 className="my-2 px-4 text-base font-semibold opacity-50">
                     {navItem.name}

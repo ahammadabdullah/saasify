@@ -1,4 +1,4 @@
-import { Home, LayoutDashboard, Navigation, Star } from "lucide-react";
+import { Home, Images, LayoutDashboard, Navigation, Star } from "lucide-react";
 
 export const navigationData = [
   {
@@ -25,10 +25,10 @@ export const navigationData = [
         name: "Nav Variants",
         icon: Navigation,
         children: [
-          { name: "Promotion", href: "/playground/?banner=promotion" },
-          { name: "Notification", href: "/playground/?banner=notification" },
-          { name: "Warning", href: "/playground/?banner=warning" },
-          { name: "Information", href: "/playground/?banner=information" },
+          { name: "Promotion", href: "?banner=promotion" },
+          { name: "Notification", href: "?banner=notification" },
+          { name: "Warning", href: "?banner=warning" },
+          { name: "Information", href: "?banner=information" },
         ],
         href: "/?banner=promotion",
       },
@@ -36,10 +36,10 @@ export const navigationData = [
         name: "Nav Alignment Variants",
         icon: Navigation,
         children: [
-          { name: "Left Align", href: "/playground/?banner-align=left" },
+          { name: "Left Align", href: "?banner-align=left" },
           {
             name: "Centered Align",
-            href: "/playground/?banner-align=centered",
+            href: "?banner-align=centered",
           },
         ],
         href: "/?banner-align=left",
@@ -83,11 +83,11 @@ export const navigationData = [
   //   href: "/?options",
   // },
   {
-    type: "Options",
-    name: "Options",
+    type: "page",
+    name: "Pages",
     href: "/?options",
     children: [
-      { name: "Option 1", href: "/playground/?option1" },
+      { name: "Icons", href: "/playground/icons", icon: Images },
       { name: "Option 2", href: "/playground/?option2" },
     ],
   },
