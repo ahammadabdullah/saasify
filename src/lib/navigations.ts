@@ -11,7 +11,7 @@ export const navigationData = [
   {
     type: "Page",
     name: "Home",
-    href: "/playground/home",
+    href: "/home",
     icon: Home,
   },
   {
@@ -19,8 +19,8 @@ export const navigationData = [
     name: "Dashboard",
     icon: LayoutDashboard,
     children: [
-      { name: "Dashboard 1", href: "/playground/?dashboard" },
-      { name: "Dashboard 2", href: "/playground/?dashboard" },
+      { name: "Dashboard 1", href: "/?dashboard" },
+      { name: "Dashboard 2", href: "/?dashboard" },
     ],
     href: "/?options",
   },
@@ -29,8 +29,8 @@ export const navigationData = [
     name: "Ai Assistant",
     icon: Bot,
     children: [
-      { name: "layout 1", href: "/playground/chat/?layout=layout1" },
-      { name: "layout 2", href: "/playground/chat/?layout=layout2" },
+      { name: "layout 1", href: "/chat/?layout=layout1" },
+      { name: "layout 2", href: "/chat/?layout=layout2" },
     ],
     href: "/?options",
   },
@@ -104,8 +104,8 @@ export const navigationData = [
     name: "Pages",
     href: "/?options",
     children: [
-      { name: "Icons", href: "/playground/icons", icon: Images },
-      { name: "Option 2", href: "/playground/?option2" },
+      { name: "Icons", href: "/icons", icon: Images },
+      { name: "Option 2", href: "/?option2" },
     ],
   },
 ];
