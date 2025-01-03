@@ -1,6 +1,5 @@
 import { MiddlePanelSkeleton } from "./middle-panel-skeleton";
 import { RightPanelSkeleton } from "./right-panel-skeleton";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export function ChatPageSkeleton() {
   return (

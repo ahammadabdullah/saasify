@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI SaaS Template",
-  description: "AI SaaS Template built with Next.js",
+  title: "SaaSify",
+  description: "SaaSify - AI SaaS Boilerplate",
 };
 
 export default function RootLayout({

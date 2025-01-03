@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/icons";
 import { Separator } from "@/components/ui/separator";
 
-export default function LoginPage() {
+export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -26,11 +26,11 @@ export default function LoginPage() {
 
   return (
     <AuthForm
-      title="Login to your account"
+      title="Sign in to your account"
       footer={
         <p className="text-sm text-muted-foreground">
           Don@apos;t have an account?{" "}
-          <Link href="/register" className="text-primary hover:underline">
+          <Link href="/signup" className="text-primary hover:underline">
             Sign up
           </Link>
         </p>
@@ -63,15 +63,15 @@ export default function LoginPage() {
         <div className="grid grid-cols-3 gap-3">
           <Button variant="outline" onClick={() => {}} disabled={isLoading}>
             <Icons.google className="h-5 w-5" />
-            <span className="sr-only">Login with Google</span>
+            <span className="sr-only">Sign In with Google</span>
           </Button>
           <Button variant="outline" onClick={() => {}} disabled={isLoading}>
             <Icons.linkedin className="h-5 w-5" />
-            <span className="sr-only">Login with LinkedIn</span>
+            <span className="sr-only">Sign In with LinkedIn</span>
           </Button>
           <Button variant="outline" onClick={() => {}} disabled={isLoading}>
             <Icons.twitter className="h-5 w-5" />
-            <span className="sr-only">Login with Twitter</span>
+            <span className="sr-only">Sign In with Twitter</span>
           </Button>
         </div>
       </div>

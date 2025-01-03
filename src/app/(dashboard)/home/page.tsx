@@ -6,7 +6,7 @@ const homePage = () => {
     <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
       <div className="max-w-4xl w-full px-6 py-12">
         <h1 className="text-4xl font-bold text-center mb-6">
-          Welcome to AI SaaS Boilerplate
+          Welcome to SaaSify
         </h1>
         <p className="text-xl text-muted-foreground text-center mb-12">
           Your all-in-one solution for building powerful AI-driven applications.

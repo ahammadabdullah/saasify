@@ -6,6 +6,6 @@ export default function Page() {
   const router = useRouter();
   if (user) {
     router.push("/home");
-  } else router.push("/login");
+  } else router.push("/signin");
   return null;
 }

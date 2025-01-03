@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/icons";
 import { Separator } from "@/components/ui/separator";
 
-export default function RegisterPage() {
+export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -30,7 +30,7 @@ export default function RegisterPage() {
       footer={
         <p className="text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link href="/login" className="text-primary hover:underline">
+          <Link href="/signin" className="text-primary hover:underline">
             Sign in
           </Link>
         </p>
