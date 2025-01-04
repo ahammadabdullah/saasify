@@ -2,36 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useTheme } from "next-themes";
-import { Bell, Sun, Moon, Monitor, LogOut, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Banner } from "@/components/banner";
 import { useSearchParams } from "next/navigation";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 import Cta from "./top-nav/CTA";
 
 interface TopNavProps {
   title: string;
 }
 
-interface Notification {
-  id: number;
-  message: string;
-  time: string;
-}
-
 export function TopNav({ title }: TopNavProps) {
-  const { theme, setTheme } = useTheme();
   const searchParams = useSearchParams();
   const [showBanner, setShowBanner] = useState(false);
   const [bannerAlign, setBannerAlign] = useState<"left" | null | "centered">(

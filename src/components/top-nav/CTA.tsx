@@ -1,12 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useState } from "react";
 import { useTheme } from "next-themes";
 import { Bell, Sun, Moon, Monitor, LogOut, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Banner } from "@/components/banner";
-import { useSearchParams } from "next/navigation";
 import {
   Popover,
   PopoverContent,
@@ -18,6 +15,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import useGetUser from "@/hooks/use-getUser";
+import useSupabaseClient from "@/lib/supabase/client";
 interface Notification {
   id: number;
   message: string;
@@ -29,6 +30,7 @@ const Cta = () => {
     { id: 2, message: "Your subscription will renew soon.", time: "1 day ago" },
     { id: 3, message: "Check out our latest blog post.", time: "3 days ago" },
   ]);
+  const [user] = useGetUser();
   const { theme, setTheme } = useTheme();
 
   const cycleTheme = () => {
@@ -54,6 +56,31 @@ const Cta = () => {
       notifications.filter((notification) => notification.id !== id)
     );
   };
+  const supabase = useSupabaseClient();
+  const router = useRouter();
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (!error) {
+        toast({
+          title: "Success",
+          description: "Successfully logged out",
+        });
+        router.push("/signin");
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to log out",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to log out",
+      });
+    }
+  };
+
   return (
     <>
       <Popover>
@@ -121,9 +148,23 @@ const Cta = () => {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <Button variant="ghost" size="icon" aria-label="Logout">
-        <LogOut className="h-5 w-5" />
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Logout"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{user?.email || "User"}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </>
   );
 };
