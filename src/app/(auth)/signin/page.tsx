@@ -66,7 +66,9 @@ export default function SignInPage() {
     try {
       await supabase.auth.signInWithOAuth({
         provider,
-        options: { redirectTo: `${location.origin}/auth/callback` },
+        options: {
+          redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
+        },
       });
     } catch (error: any) {
       toast({

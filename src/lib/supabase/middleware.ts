@@ -33,7 +33,6 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
   const metaData = user?.user_metadata;
-  console.log(user, "from middleware");
   if (
     !user &&
     !request.nextUrl.pathname.startsWith("/signin") &&
