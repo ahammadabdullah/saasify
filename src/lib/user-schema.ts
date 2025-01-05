@@ -30,5 +30,26 @@ export const loginUserSchema = object({
   ),
 });
 
+export const resetPasswordSchema = object({
+  email: string({ required_error: "Email is required" })
+    .min(1, "Email is required")
+    .email("Invalid email"),
+});
+
+export const updatePasswordSchema = object({
+  password: string({ required_error: "Password is required" })
+    .min(1, "Password is required")
+    .min(8, "Password must be more than 8 characters")
+    .max(32, "Password must be less than 32 characters"),
+  passwordConfirm: string({
+    required_error: "Please confirm your password",
+  }).min(1, "Please confirm your password"),
+}).refine((data) => data.password === data.passwordConfirm, {
+  path: ["passwordConfirm"],
+  message: "Passwords do not match",
+});
+
 export type CreateUserInput = TypeOf<typeof createUserSchema>;
 export type LoginUserInput = TypeOf<typeof loginUserSchema>;
+export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
+export type UpdatePasswordInput = TypeOf<typeof updatePasswordSchema>;

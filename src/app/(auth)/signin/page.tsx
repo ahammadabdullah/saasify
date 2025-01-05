@@ -14,13 +14,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { signInWithEmailAndPassword } from "@/app/_action";
+import { loginUserSchema } from "@/lib/user-schema";
 
-const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-type LoginSchema = z.infer<typeof loginSchema>;
+type LoginSchema = z.infer<typeof loginUserSchema>;
 
 export default function SignInPage() {
   const router = useRouter();
@@ -33,7 +29,7 @@ export default function SignInPage() {
     formState: { errors, isSubmitting },
     reset,
   } = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginUserSchema),
   });
 
   const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
@@ -83,12 +79,22 @@ export default function SignInPage() {
     <AuthForm
       title="Sign in to your account"
       footer={
-        <p className="text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-primary hover:underline">
-            Sign up
-          </Link>
-        </p>
+        <div>
+          <p className="text-sm text-muted-foreground text-center">
+            <Link
+              href="/reset-password"
+              className="text-primary hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Don&apos;t have an account?{" "}
+            <Link href="/signup" className="text-primary hover:underline">
+              Sign up
+            </Link>
+          </p>
+        </div>
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

@@ -52,3 +52,34 @@ export async function signInWithEmailAndPassword(data: LoginUserInput) {
   revalidatePath("/", "layout");
   return { success: true };
 }
+
+export async function resetPassword(email: string) {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/update-password`,
+  });
+  console.log(error, "from resetPassword");
+  if (error) {
+    return {
+      success: false,
+      error: {
+        message: error.code,
+      },
+    };
+  }
+  return { success: true };
+}
+
+export async function updatePassword({ password }: { password: string }) {
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    return {
+      success: false,
+      error: {
+        message: error.message,
+      },
+    };
+  }
+  return { success: true };
+}
