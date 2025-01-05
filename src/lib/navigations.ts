@@ -1,5 +1,8 @@
 import {
+  AlignJustify,
+  Bell,
   Bot,
+  Component,
   Home,
   Images,
   LayoutDashboard,
@@ -14,23 +17,23 @@ export const navigationData = [
     href: "/home",
     icon: Home,
   },
+  // {
+  //   type: "dropdown",
+  //   name: "Dashboard",
+  //   icon: LayoutDashboard,
+  //   children: [
+  //     { name: "Dashboard 1", href: "/?dashboard" },
+  //     { name: "Dashboard 2", href: "/?dashboard" },
+  //   ],
+  //   href: "/?options",
+  // },
   {
     type: "dropdown",
-    name: "Dashboard",
-    icon: LayoutDashboard,
-    children: [
-      { name: "Dashboard 1", href: "/?dashboard" },
-      { name: "Dashboard 2", href: "/?dashboard" },
-    ],
-    href: "/?options",
-  },
-  {
-    type: "dropdown",
-    name: "Ai Assistant",
+    name: "AI Assistant",
     icon: Bot,
     children: [
-      { name: "layout 1", href: "/chat/?layout=layout1" },
-      { name: "layout 2", href: "/chat/?layout=layout2" },
+      { name: "Left Aligned", href: "/chat/?layout=layout1" },
+      { name: "Right Aligned", href: "/chat/?layout=layout2" },
     ],
     href: "/?options",
   },
@@ -39,8 +42,8 @@ export const navigationData = [
     name: "Navigation",
     items: [
       {
-        name: "Nav Variants",
-        icon: Navigation,
+        name: "Banners",
+        icon: Bell,
         children: [
           { name: "Promotion", href: "?banner=promotion" },
           { name: "Notification", href: "?banner=notification" },
@@ -50,12 +53,12 @@ export const navigationData = [
         href: "/?banner=promotion",
       },
       {
-        name: "Nav Alignment Variants",
-        icon: Navigation,
+        name: "Banner Alignments",
+        icon: AlignJustify,
         children: [
-          { name: "Left Align", href: "?banner-align=left" },
+          { name: "Left Aligned", href: "?banner-align=left" },
           {
-            name: "Centered Align",
+            name: "Center Aligned",
             href: "?banner-align=centered",
           },
         ],
@@ -105,7 +108,11 @@ export const navigationData = [
     href: "/?options",
     children: [
       { name: "Icons", href: "/icons", icon: Images },
-      { name: "Option 2", href: "/?option2" },
+      {
+        name: "Button & Filters",
+        href: "/button-and-filters",
+        icon: Component,
+      },
     ],
   },
 ];

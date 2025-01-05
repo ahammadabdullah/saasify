@@ -37,20 +37,22 @@ export async function signUpWithEmailAndPassword({
 
 export async function signInWithEmailAndPassword(data: LoginUserInput) {
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.signInWithPassword({
-    email: data.email,
-    password: data.password,
-  });
-  if (error) {
+  const { data: authData, error: authError } =
+    await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
+  console.log(authData, "from signInWithEmailAndPassword");
+  if (authError) {
     return {
       success: false,
       error: {
-        message: error.code,
+        message: authError.code,
       },
     };
   }
   revalidatePath("/", "layout");
-  return { success: true };
+  return { success: true, data: authData };
 }
 
 export async function resetPassword(email: string) {

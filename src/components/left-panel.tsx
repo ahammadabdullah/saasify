@@ -57,7 +57,7 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
       return (
         <div key={item.name} className="space-y-1">
           {!collapsed && (
-            <div className="ml-4 space-y-1">
+            <div className=" space-y-1">
               {item.children.map((child: any) => {
                 const active = isActive(child.href);
                 return (
@@ -156,7 +156,7 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
         >
           <Link href={item.href}>
             {item.icon && <item.icon className="h-4 w-4 mr-2" />}
-            {!collapsed && <span className="ml-2">{item.name}</span>}
+            {!collapsed && <span className="">{item.name}</span>}
           </Link>
         </Button>
       );
@@ -209,7 +209,6 @@ export function LeftPanel({ collapsed, onToggle }: LeftPanelProps) {
               {navItem.type === "cluster"
                 ? navItem?.items?.map(renderNavItem)
                 : renderNavItem(navItem)}
-              {/* <div className="my-5" /> */}
             </Fragment>
           ))}
         </div>

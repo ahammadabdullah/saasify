@@ -32,14 +32,37 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (
-    !user &&
-    !["/signin", "/auth", "/signup", "/reset-password"].some((path) =>
-      request.nextUrl.pathname.startsWith(path)
-    )
-  ) {
-    const url = request.nextUrl.clone();
+
+  const authRoutes = [
+    "/signin",
+    "/signup",
+    "/forgot-password",
+    "/reset-password",
+    "/auth",
+  ];
+  const protectedRoutes = authRoutes.every(
+    (path) => !request.nextUrl.pathname.startsWith(path)
+  );
+
+  const url = request.nextUrl.clone();
+
+  if (url.pathname === "/") {
+    if (user) {
+      url.pathname = "/home";
+      return NextResponse.redirect(url);
+    } else {
+      url.pathname = "/signin";
+      return NextResponse.redirect(url);
+    }
+  }
+
+  if (!user && protectedRoutes) {
     url.pathname = "/signin";
+    return NextResponse.redirect(url);
+  }
+
+  if (user && !protectedRoutes) {
+    url.pathname = "/home";
     return NextResponse.redirect(url);
   }
 
