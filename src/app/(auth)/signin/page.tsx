@@ -57,7 +57,7 @@ export default function SignInPage() {
   };
 
   const loginWithProvider = async (
-    provider: "google" | "twitter" | "linkedin"
+    provider: "google" | "twitter" | "linkedin_oidc"
   ) => {
     try {
       await supabase.auth.signInWithOAuth({
@@ -146,7 +146,7 @@ export default function SignInPage() {
           </Button>
           <Button
             variant="outline"
-            onClick={() => loginWithProvider("linkedin")}
+            onClick={() => loginWithProvider("linkedin_oidc")}
             disabled={isSubmitting}
           >
             <Icons.linkedin className="h-5 w-5" />

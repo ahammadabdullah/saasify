@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Send } from "lucide-react";
+import { Brain, Send, User } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -20,7 +20,32 @@ interface Message {
 
 const AiChat = () => {
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content: "Hello! How can I help you today?",
+    },
+    {
+      role: "user",
+      content: "I need help with my account",
+    },
+    {
+      role: "assistant",
+      content: "Sure! What seems to be the problem?",
+    },
+    {
+      role: "user",
+      content: "I can't log in",
+    },
+    {
+      role: "assistant",
+      content: "I can help you with that. Can you provide me with your email?",
+    },
+    {
+      role: "user",
+      content: "Sure, it's johndoe@gmail.com",
+    },
+  ]);
   const [model, setModel] = useState("gpt-4");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -41,24 +66,34 @@ const AiChat = () => {
     <div className="flex flex-col h-full">
       <ResizablePanelGroup direction="vertical">
         {/* Chat Messages Panel */}
-        <ResizablePanel defaultValue={80} maxSize={80}>
-          <div className="flex-grow overflow-auto p-2">
+        <ResizablePanel defaultSize={80}>
+          <div className="flex-grow overflow-auto p-2 space-y-4 h-[500px]">
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`mb-2 ${
-                  message.role === "user" ? "text-right" : "text-left"
+                className={`flex items-center ${
+                  message.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
-                <span
-                  className={`inline-block p-2 rounded-lg ${
+                {message.role === "assistant" && (
+                  <div className="flex-shrink-0 mr-2">
+                    <Brain className="w-6 h-6 text-primary" />
+                  </div>
+                )}
+                <div
+                  className={`max-w-[80%] p-2 rounded-lg ${
                     message.role === "user"
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted"
                   }`}
                 >
                   {message.content}
-                </span>
+                </div>
+                {message.role === "user" && (
+                  <div className="flex-shrink-0 ml-2">
+                    <User className="w-6 h-6 text-primary" />
+                  </div>
+                )}
               </div>
             ))}
           </div>

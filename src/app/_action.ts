@@ -1,5 +1,6 @@
 "use server";
 
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { CreateUserInput, LoginUserInput } from "@/lib/user-schema";
 import { revalidatePath } from "next/cache";
@@ -42,7 +43,6 @@ export async function signInWithEmailAndPassword(data: LoginUserInput) {
       email: data.email,
       password: data.password,
     });
-  console.log(authData, "from signInWithEmailAndPassword");
   if (authError) {
     return {
       success: false,
@@ -60,7 +60,6 @@ export async function resetPassword(email: string) {
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/update-password`,
   });
-  console.log(error, "from resetPassword");
   if (error) {
     return {
       success: false,
