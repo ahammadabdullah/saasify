@@ -6,6 +6,7 @@ import {
   Home,
   Images,
   LayoutDashboard,
+  Mail,
   Navigation,
   Star,
 } from "lucide-react";
@@ -107,9 +108,11 @@ export const navigationData = [
     name: "Pages",
     href: "/?options",
     children: [
+      { name: "Emails", href: "/emails", icon: Mail },
       { name: "Icons", href: "/icons", icon: Images },
+
       {
-        name: "Button & Filters",
+        name: "Buttons",
         href: "/button-and-filters",
         icon: Component,
       },
