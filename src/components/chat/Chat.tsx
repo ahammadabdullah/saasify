@@ -79,8 +79,8 @@ export default function Chat(): JSX.Element {
         {isDesktop && <ResizableHandle withHandle />}
         <ResizablePanel
           defaultSize={isDesktop ? 40 : 0}
-          minSize={isDesktop ? 30 : 0}
-          maxSize={isDesktop ? 70 : 0}
+          minSize={isDesktop ? 40 : 0}
+          maxSize={isDesktop ? 60 : 0}
         >
           {layout === "layout1"
             ? rightPanelLoaded && (
