@@ -113,7 +113,7 @@ export const navigationData = [
 
       {
         name: "Buttons",
-        href: "/button-and-filters",
+        href: "/buttons",
         icon: Component,
       },
     ],

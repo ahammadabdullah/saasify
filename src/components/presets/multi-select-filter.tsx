@@ -21,12 +21,12 @@ import {
 import { CommandList } from "cmdk";
 
 const multiSelectFilterVariants = cva(
-  "w-full transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring flex items-center justify-between",
+  "w-full transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring flex items-center justify-between ",
   {
     variants: {
       variant: {
         default:
-          "bg-white border border-input hover:bg-accent hover:text-accent-foreground text-primary dark:text-accent",
+          "bg-white border border-input hover:bg-foreground hover:text-foreground  text-primary dark:text-accent",
       },
       size: {
         default: "h-9 px-4 py-2",
