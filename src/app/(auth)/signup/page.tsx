@@ -50,7 +50,12 @@ export default function SignUpPage() {
         reset({ password: "" });
         return;
       }
-      toast({ title: "Success", description: "Successfully Signed Up" });
+      toast({
+        variant: "default",
+        title: "Success",
+        description:
+          "Successfully signed up. Check your email for confirmation.",
+      });
       setIsLoading(false);
       router.push("/signin");
     });
