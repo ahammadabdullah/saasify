@@ -13,6 +13,7 @@ import { EmailEditor } from "@/components/emails/email-editor";
 import { EmailPreview } from "@/components/emails/email-preview";
 import { toast } from "@/hooks/use-toast";
 import { EmailPageSkeleton } from "@/components/Skeletons/email-page-skeleton";
+import { Icons } from "@/components/icons";
 
 export default function EmailsPage() {
   const [selectedTemplate, setSelectedTemplate] = useState(
@@ -23,10 +24,13 @@ export default function EmailsPage() {
   const [content, setContent] = useState(emailTemplates[0].content);
   const [scheduleTime, setScheduleTime] = useState<Date | undefined>(undefined);
   const [loading, setLoading] = useState(true);
-
+  const [isSending, setIsSending] = useState(false);
   useEffect(() => {
     setLoading(false);
   }, []);
+  useEffect(() => {
+    setScheduleTime(undefined);
+  }, [selectedTemplate]);
   useEffect(() => {
     const template = emailTemplates.find((t) => t.name === selectedTemplate);
     if (template) {
@@ -36,22 +40,77 @@ export default function EmailsPage() {
   }, [selectedTemplate]);
 
   const handleTestEmail = async () => {
-    // TODO: Implement email sending logic with Resend
-    console.log("Sending test email:", {
-      email,
-      subject,
-      content,
-      scheduleTime,
-    });
-    toast({
-      variant: "default",
-      title: "Test Email Sent",
-      description: `Email sent to ${email}`,
-    });
+    setIsSending(true);
+
+    // Validate required fields
+    if (!email) {
+      toast({
+        variant: "destructive",
+        title: "Email Required",
+        description: "Please enter an email address to send the test email.",
+      });
+      setIsSending(false);
+      return;
+    }
+    if (!subject || !content) {
+      toast({
+        variant: "destructive",
+        title: "Subject and Content Required",
+        description: "Please enter a subject and content for the email.",
+      });
+      setIsSending(false);
+      return;
+    }
+
+    if (
+      scheduleTime &&
+      new Date(scheduleTime).getTime() < new Date().getTime()
+    ) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Schedule Time",
+        description:
+          "Please select a future date and time to schedule the email.",
+      });
+      setIsSending(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/v1/emails`, {
+        method: "POST",
+        body: JSON.stringify({ email, subject, content, scheduleTime }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const res = await response.json();
+
+      if (res?.data?.id) {
+        toast({
+          variant: "default",
+          title: scheduleTime ? "Email Scheduled" : "Test Email Sent",
+          description: scheduleTime
+            ? "Your email has been scheduled successfully."
+            : `Email sent to ${email}`,
+        });
+      } else {
+        throw new Error(res.error || "Failed to send email");
+      }
+    } catch (err: any) {
+      console.error("Error sending email:", err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: err.message || "Failed to send email",
+      });
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const handleSaveTemplate = () => {
-    // Update the emailTemplates array with the new content
     const updatedTemplates = emailTemplates.map((template) =>
       template.name === selectedTemplate
         ? { ...template, subject, content }
@@ -107,8 +166,13 @@ export default function EmailsPage() {
                   <Button
                     onClick={handleTestEmail}
                     className="w-full md:w-auto"
+                    disabled={isSending}
                   >
-                    Test
+                    {!isSending ? (
+                      "Test"
+                    ) : (
+                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                    )}
                   </Button>
                 </div>
               </div>
