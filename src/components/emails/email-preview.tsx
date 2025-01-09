@@ -4,9 +4,8 @@ interface EmailPreviewProps {
 
 export function EmailPreview({ content }: EmailPreviewProps) {
   return (
-    <div
-      className="border p-2 md:p-4 min-h-[200px] md:min-h-[300px] prose max-w-full overflow-auto text-sm md:text-base"
-      dangerouslySetInnerHTML={{ __html: content }}
-    />
+    <div className="bg-primary text-secondary p-5 rounded-lg shadow-md m-5">
+      <div dangerouslySetInnerHTML={{ __html: content }} />
+    </div>
   );
 }
