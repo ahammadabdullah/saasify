@@ -2,7 +2,9 @@ import {
   AlignJustify,
   Bell,
   Bot,
+  CircleAlert,
   Component,
+  Construction,
   Home,
   Images,
   LayoutDashboard,
@@ -110,11 +112,20 @@ export const navigationData = [
     children: [
       { name: "Emails", href: "/emails", icon: Mail },
       { name: "Icons", href: "/icons", icon: Images },
-
       {
         name: "Buttons",
         href: "/buttons",
         icon: Component,
+      },
+      {
+        name: "404",
+        href: "/not-found",
+        icon: CircleAlert,
+      },
+      {
+        name: "Maintenance",
+        href: "/maintenance",
+        icon: Construction,
       },
     ],
   },
