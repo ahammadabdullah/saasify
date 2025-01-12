@@ -1,8 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Lottie from "lottie-react";
 import notFoundData from "../../../assets/404.json";
+
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 const NotFoundPage = () => {
   return (
