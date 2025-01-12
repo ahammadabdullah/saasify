@@ -11,7 +11,7 @@ export default function ButtonPage() {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
   return (
-    <ScrollArea className="h-full w-full p-4">
+    <ScrollArea className="h-full w-full p-4 pb-0">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-8">
           <ButtonsSection />
