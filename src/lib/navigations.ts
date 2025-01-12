@@ -8,9 +8,12 @@ import {
   Home,
   Images,
   LayoutDashboard,
+  ListTodo,
   Mail,
   Navigation,
+  SquareUser,
   Star,
+  Upload,
 } from "lucide-react";
 
 export const navigationData = [
@@ -126,6 +129,21 @@ export const navigationData = [
         name: "Maintenance",
         href: "/maintenance",
         icon: Construction,
+      },
+      {
+        name: "Profile & Settings",
+        href: "/settings",
+        icon: SquareUser,
+      },
+      {
+        name: "File Upload",
+        href: "/maintenance",
+        icon: Upload,
+      },
+      {
+        name: "Wait list",
+        href: "/maintenance",
+        icon: ListTodo,
       },
     ],
   },
