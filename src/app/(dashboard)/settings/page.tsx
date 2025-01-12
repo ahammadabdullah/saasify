@@ -1,10 +1,31 @@
 "use client";
 
+import { AppSettingsCardSkeleton } from "@/components/Skeletons/app-settings-card-skeleton";
+import { ProfileCardSkeleton } from "@/components/Skeletons/profile-card-skeleton";
+import { SubscriptionCardSkeleton } from "@/components/Skeletons/subscription-card-skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { ProfileCard } from "@/components/settings/profile-card";
-import { SubscriptionCard } from "@/components/settings/subscription-card";
-import { AppSettingsCard } from "@/components/settings/app-settings-card";
+import dynamic from "next/dynamic";
+
+const ProfileCard = dynamic(
+  () =>
+    import("@/components/settings/profile-card").then((mod) => mod.ProfileCard),
+  { loading: () => <ProfileCardSkeleton />, ssr: false }
+);
+const SubscriptionCard = dynamic(
+  () =>
+    import("@/components/settings/subscription-card").then(
+      (mod) => mod.SubscriptionCard
+    ),
+  { loading: () => <SubscriptionCardSkeleton />, ssr: false }
+);
+const AppSettingsCard = dynamic(
+  () =>
+    import("@/components/settings/app-settings-card").then(
+      (mod) => mod.AppSettingsCard
+    ),
+  { loading: () => <AppSettingsCardSkeleton />, ssr: false }
+);
 
 export default function SettingsPage() {
   return (
