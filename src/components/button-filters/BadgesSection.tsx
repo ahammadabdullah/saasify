@@ -18,7 +18,7 @@ export const BadgesSection = () => (
     </div>
 
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">Pill</h3>
+      <h3 className="text-lg font-medium">Pill-Shaped</h3>
       <div className="flex flex-wrap gap-4">
         <Badge variant="default" shape="pill">
           Default

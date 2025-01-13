@@ -59,7 +59,7 @@ export const ButtonsSection = () => (
     </div>
 
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">Pill</h3>
+      <h3 className="text-lg font-medium">Pill-Shaped</h3>
       <div className="flex flex-wrap gap-4">
         <CustomButton variant="default" shape="pill">
           <Mail className="h-4 w-4 mr-2" /> Email
