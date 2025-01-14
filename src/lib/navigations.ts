@@ -142,7 +142,7 @@ export const navigationData = [
       },
       {
         name: "Wait list",
-        href: "/maintenance",
+        href: "/waitlist",
         icon: ListTodo,
       },
     ],
