@@ -137,7 +137,7 @@ export const navigationData = [
       },
       {
         name: "File Upload",
-        href: "/maintenance",
+        href: "/file-upload",
         icon: Upload,
       },
       {
