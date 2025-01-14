@@ -50,15 +50,6 @@ export default function FolderContentsPage() {
 
   return (
     <>
-      {/* <Breadcrumb>
-        <BreadcrumbItem>
-          <Link href="/file-upload">File Upload</Link>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <Link href={`/file-upload/${folderName}`}>{folderName}</Link>
-        </BreadcrumbItem>
-      </Breadcrumb> */}
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
