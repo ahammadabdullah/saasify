@@ -1,7 +1,11 @@
 "use client";
 
-import { Textarea } from "@/components/ui/textarea";
+import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
+import "react-quill/dist/quill.snow.css";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface EmailEditorProps {
   content: string;
@@ -9,15 +13,44 @@ interface EmailEditorProps {
 }
 
 export function EmailEditor({ content, onChange }: EmailEditorProps) {
+  const modules = {
+    toolbar: [
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image"],
+      ["clean"],
+    ],
+  };
+
+  const formats = [
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "bullet",
+    "link",
+    "image",
+  ];
+
   return (
-    <Textarea
-      value={content}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder="Enter your email content here..."
+    <div
       className={cn(
-        "min-h-[350px] md:min-h-[500px] md:max-h-[500px] font-mono text-sm focus:border-1 focus:border-primary",
+        " text-sm flex flex-col max-h-[60vh]",
         "scrollbar-thin scrollbar-thumb-muted-foreground scrollbar-track-transparent"
       )}
-    />
+    >
+      <ReactQuill
+        value={content}
+        onChange={onChange}
+        modules={modules}
+        formats={formats}
+        scrollingContainer={
+          ".scrollbar-thin scrollbar-thumb-muted-foreground scrollbar-track-transparent"
+        }
+        className="overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground scrollbar-track-transparent"
+        placeholder="Enter your email content here..."
+      />
+    </div>
   );
 }

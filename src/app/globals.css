@@ -76,3 +76,19 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* quill editor styles */
+.ql-toolbar,
+.ql-container {
+  border-radius: 0.5rem;
+}
+
+.ql-toolbar {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.ql-container {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
