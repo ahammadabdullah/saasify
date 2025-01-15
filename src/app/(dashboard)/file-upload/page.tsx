@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -15,6 +15,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ImageGallery } from "@/components/file-upload/image-gallery";
 import { FolderList } from "@/components/file-upload/folder-list";
+import useGetUser from "@/hooks/use-getUser";
+import { getUserFiles } from "@/lib/supabase/file-upload/fileUpload";
+import { FileList } from "@/components/file-upload/file-list";
 
 // Mock data for demonstration
 const mockImages = [
@@ -29,12 +32,21 @@ const mockFolders = [
   { id: "2", name: "Images" },
   { id: "3", name: "Projects" },
 ];
+const mockFiles = [
+  { id: "1", name: "report.pdf" },
+  {
+    id: "2",
+    name: "presentation.pptx",
+  },
+  { id: "3", name: "data.xlsx" },
+  { id: "4", name: "notes.txt" },
+];
 
 export default function FileUploadPage() {
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-
   const [newFolderName, setNewFolderName] = useState("");
   const [folders, setFolders] = useState(mockFolders);
+  const [files, setFiles] = useState<any>(mockFiles);
+  const [user] = useGetUser();
 
   const handleDeleteFolder = (id: string) => {
     setFolders((prev) => prev.filter((folder) => folder.id !== id));
@@ -50,7 +62,56 @@ export default function FileUploadPage() {
       setNewFolderName("");
     }
   };
+  useEffect(() => {
+    const fetchFiles = async () => {
+      if (user?.email) {
+        const data = await getUserFiles(user.email);
+        console.log("Fetched data", data);
 
+        // Categorize files into root and folders
+        const rootFiles = [] as any;
+        const folderFiles = {} as any;
+
+        data.forEach((file) => {
+          const filePath = file.file_path;
+
+          // If the file path contains a folder, categorize it accordingly
+          if (filePath.includes("/")) {
+            const [folderName, fileName] = filePath.split("/", 2);
+            if (!folderFiles[folderName]) {
+              folderFiles[folderName] = [];
+            }
+            folderFiles[folderName].push({ ...file, fileName });
+          } else {
+            rootFiles.push({ ...file, fileName: filePath });
+          }
+        });
+
+        // Update the state
+        setFiles(rootFiles);
+        setFolders(
+          Object.keys(folderFiles).map((folderName) => ({
+            id: Math.random().toString(36).substr(2, 9),
+            name: folderName,
+          }))
+        );
+        // Optionally, store the folder-based files separately as well
+        // setFolderFiles(folderFiles);
+      }
+    };
+    fetchFiles();
+  }, [user?.email]);
+
+  console.log(files);
+
+  const handleDeleteFile = (id: string) => {
+    setFiles((prev: any) => prev.filter((file: any) => file.id !== id));
+  };
+
+  const handleDownloadFile = (id: string) => {
+    // Implement file download logic here
+    console.log(`Downloading file with id: ${id}`);
+  };
   return (
     <div className="space-y-8 mt-6">
       <ImageGallery images={mockImages} />
@@ -85,6 +146,11 @@ export default function FileUploadPage() {
         </Dialog>
       </div>
       <FolderList folders={folders} onDeleteFolder={handleDeleteFolder} />
+      <FileList
+        files={files}
+        onDeleteFile={handleDeleteFile}
+        onDownloadFile={handleDownloadFile}
+      />
     </div>
   );
 }

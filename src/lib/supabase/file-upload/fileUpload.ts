@@ -10,20 +10,34 @@ export async function uploadFile(
   try {
     const supabase = getSupabaseBrowserClient();
     const path = folderName ? `${folderName}/${file.name}` : file.name;
+    const { data: existingFiles, error: listError } = await supabase.storage
+      .from(bucketName)
+      .list(folderName || "", {
+        search: file.name,
+      });
+    console.log(existingFiles, "existingFiles");
+    if (listError) {
+      console.error("Error listing files:", listError);
+    } else if (existingFiles?.length > 0) {
+      console.log("File already exists, skipping upload...");
+      throw new Error("File already exists");
+    }
     const estimatedTime = Math.min(file.size / 50000, 10) * 1000;
     let progress = 0;
     const updateInterval = 100;
     const progressStep = 100 / (estimatedTime / updateInterval);
 
+    // Track progress
     const progressTimer = setInterval(() => {
       progress = Math.min(progress + progressStep, 100);
       setProgress(Math.round(progress));
     }, updateInterval);
 
-    const { error } = await supabase.storage
+    const { data, error } = await supabase.storage
       .from(bucketName)
       .upload(path, file, {
-        upsert: true,
+        cacheControl: "3600",
+        upsert: false,
       });
 
     clearInterval(progressTimer);
@@ -32,10 +46,42 @@ export async function uploadFile(
     if (error) {
       throw error;
     }
-    console.log(`File uploaded by: ${userEmail}`);
-    return { success: true, message: "Upload complete" };
+
+    const { data: dbData, error: dbError } = await supabase
+      .from("user_files")
+      .insert([
+        {
+          user_email: userEmail,
+          file_path: data.path,
+          bucket_name: bucketName,
+        },
+      ]);
+    console.log("dbData", dbData);
+    if (dbError) {
+      console.error("Database insert error:", dbError);
+      throw dbError;
+    } else {
+      console.log("File uploaded successfully, reference stored:", dbData);
+      return { success: true, message: "Upload complete", fileData: dbData };
+    }
   } catch (error) {
     console.error("Error uploading file:", error);
-    throw error;
+    return { success: false, message: "Upload failed", error };
   }
 }
+
+export const getUserFiles = async (userEmail: string) => {
+  const supabase = getSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from("user_files")
+    .select("file_path, created_at, id")
+    .eq("user_email", userEmail);
+
+  console.log("------------------", data, "------------------");
+  if (error) {
+    console.error("Error fetching user files:", error);
+    return [];
+  }
+
+  return data;
+};
