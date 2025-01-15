@@ -27,7 +27,6 @@
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.10",
     "@tailwindcss/typography": "^0.5.16",
-    "backblaze-b2": "^1.7.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -51,7 +50,6 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/backblaze-b2": "^1.5.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
