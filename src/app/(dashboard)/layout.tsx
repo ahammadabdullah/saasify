@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { LeftPanel } from "@/components/left-panel";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Suspense, useEffect, useState } from "react";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TopNavSkeleton } from "@/components/Skeletons/top-nav-skeleton";
 
 const TopNav = dynamic(
@@ -28,25 +28,28 @@ export default function RootLayout({
   useEffect(() => {
     setLeftPanelCollapsed(!isDesktop);
   }, [isDesktop]);
+  const queryClient = new QueryClient();
 
   return (
-    <div className={`flex min-h-screen `}>
-      <Suspense>
-        <LeftPanel
-          collapsed={leftPanelCollapsed}
-          onToggle={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
-        />
-      </Suspense>
-      <div className="flex flex-1 flex-col">
-        <TopNav title="AI SaaS Boilerplate" />
-        <div
-          className={`flex flex-1 flex-col max-h-[calc(100vh-100px)] ${
-            isLayoutLoaded ? "" : "md:ml-72"
-          }`}
-        >
-          {children}
+    <QueryClientProvider client={queryClient}>
+      <div className={`flex min-h-screen `}>
+        <Suspense>
+          <LeftPanel
+            collapsed={leftPanelCollapsed}
+            onToggle={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
+          />
+        </Suspense>
+        <div className="flex flex-1 flex-col">
+          <TopNav title="AI SaaS Boilerplate" />
+          <div
+            className={`flex flex-1 flex-col max-h-[calc(100vh-100px)] ${
+              isLayoutLoaded ? "" : "md:ml-72"
+            }`}
+          >
+            {children}
+          </div>
         </div>
       </div>
-    </div>
+    </QueryClientProvider>
   );
 }

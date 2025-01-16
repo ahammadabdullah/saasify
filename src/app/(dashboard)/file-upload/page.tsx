@@ -23,6 +23,7 @@ import {
 } from "@/lib/supabase/file-upload/fileUpload";
 import { FileList } from "@/components/file-upload/file-list";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 // Mock data for demonstration
 const mockImages = [
@@ -50,8 +51,49 @@ const mockFiles = [
 export default function FileUploadPage() {
   const [newFolderName, setNewFolderName] = useState("");
   const [folders, setFolders] = useState(mockFolders);
+  const [foldersFiles, setFolderFiles] = useState<any>({});
   const [files, setFiles] = useState<any>(mockFiles);
   const [user] = useGetUser();
+
+  const fetchUserFiles = async (email: string) => {
+    const data = await getUserFiles(email);
+    const rootFiles: any[] = [];
+    const folderFiles: Record<string, any[]> = {};
+
+    data.forEach((file) => {
+      const filePath = file.file_path;
+      if (filePath.includes("/")) {
+        const [folderName, fileName] = filePath.split("/", 2);
+        if (!folderFiles[folderName]) {
+          folderFiles[folderName] = [];
+        }
+        folderFiles[folderName].push({ ...file, fileName });
+      } else {
+        rootFiles.push({ ...file, fileName: filePath });
+      }
+    });
+
+    return { rootFiles, folderFiles };
+  };
+
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["userFiles", user?.email],
+    queryFn: () => fetchUserFiles(user?.email || ""),
+  });
+  useEffect(() => {
+    if (data) {
+      setFiles(data.rootFiles);
+      if (Object.keys(data.folderFiles).length > 0) {
+        setFolders(
+          Object.keys(data.folderFiles).map((folderName) => ({
+            id: Math.random().toString(36).substr(2, 9),
+            name: folderName,
+          }))
+        );
+        setFolderFiles(data.folderFiles);
+      }
+    }
+  }, [data]);
 
   const handleDeleteFolder = (id: string) => {
     setFolders((prev) => prev.filter((folder) => folder.id !== id));
@@ -67,49 +109,50 @@ export default function FileUploadPage() {
       setNewFolderName("");
     }
   };
-  useEffect(() => {
-    const fetchFiles = async () => {
-      if (user?.email) {
-        const data = await getUserFiles(user.email);
-        console.log("Fetched data", data);
+  // useEffect(() => {
+  //   const fetchFiles = async () => {
+  //     if (user?.email) {
+  //       const data = await getUserFiles(user.email);
+  //       console.log("Fetched data", data);
 
-        const rootFiles = [] as any;
-        const folderFiles = {} as any;
+  //       const rootFiles = [] as any;
+  //       const folderFiles = {} as any;
 
-        data.forEach((file) => {
-          const filePath = file.file_path;
+  //       data.forEach((file) => {
+  //         const filePath = file.file_path;
 
-          if (filePath.includes("/")) {
-            const [folderName, fileName] = filePath.split("/", 2);
-            if (!folderFiles[folderName]) {
-              folderFiles[folderName] = [];
-            }
-            folderFiles[folderName].push({ ...file, fileName });
-          } else {
-            rootFiles.push({ ...file, fileName: filePath });
-          }
-        });
+  //         if (filePath.includes("/")) {
+  //           const [folderName, fileName] = filePath.split("/", 2);
+  //           if (!folderFiles[folderName]) {
+  //             folderFiles[folderName] = [];
+  //           }
+  //           folderFiles[folderName].push({ ...file, fileName });
+  //         } else {
+  //           rootFiles.push({ ...file, fileName: filePath });
+  //         }
+  //       });
 
-        setFiles(rootFiles);
-        setFolders(
-          Object.keys(folderFiles).map((folderName) => ({
-            id: Math.random().toString(36).substr(2, 9),
-            name: folderName,
-          }))
-        );
-        // setFolderFiles(folderFiles);
-      }
-    };
-    fetchFiles();
-  }, [user?.email]);
-
-  console.log(files);
+  //       setFiles(rootFiles);
+  //       if (Object.keys(folderFiles).length > 0) {
+  //         setFolders(
+  //           Object.keys(folderFiles).map((folderName) => ({
+  //             id: Math.random().toString(36).substr(2, 9),
+  //             name: folderName,
+  //           }))
+  //         );
+  //       }
+  //       setFolderFiles(folderFiles);
+  //     }
+  //   };
+  //   fetchFiles();
+  // }, [user?.email]);
 
   const handleDeleteFile = async (filePath: string, id: string) => {
     const res = await deleteFile(filePath, id);
     setFiles((prevFiles: any) =>
       prevFiles.filter((file: any) => file.file_path !== filePath)
     );
+    refetch();
   };
 
   const handleDownloadFile = async (filePath: string) => {

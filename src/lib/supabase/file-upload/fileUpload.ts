@@ -133,3 +133,30 @@ export const downloadFile = async (filePath: string) => {
   a.click();
   a.remove();
 };
+
+export async function getFilesByFolder(folderName: string, userEmail: string) {
+  try {
+    const supabase = getSupabaseBrowserClient();
+    const folderPath = folderName ? `${folderName}/` : "";
+
+    const { data, error } = await supabase
+      .from("user_files")
+      .select("file_path, created_at, id")
+      .eq("user_email", userEmail)
+      .ilike("file_path", `${folderPath}%`);
+    if (error) {
+      console.error("Error fetching files:", error.message);
+      return [];
+    }
+
+    const filesInFolder = data?.filter((file) => {
+      const pathSegments = file.file_path.split("/");
+      return pathSegments.length > 1 && pathSegments[0] === folderName;
+    });
+
+    return filesInFolder || [];
+  } catch (error) {
+    console.error("Unexpected error fetching files:", error);
+    return [];
+  }
+}

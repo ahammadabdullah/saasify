@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import useGetUser from "@/hooks/use-getUser";
 import { toast } from "@/hooks/use-toast";
 import { uploadFile } from "@/lib/supabase/file-upload/fileUpload";
+import { useQueryClient } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
@@ -22,9 +23,10 @@ export default function FileUploadLayout({
 
   const path = usePathname();
   const [user] = useGetUser();
+  const queryClient = useQueryClient();
+
   const handleUpload = async (files: FileList) => {
     const folderName = path === "/file-upload" ? null : path.split("/")[2];
-
     const newUploads = Array.from(files).map((file) => ({
       id: Math.random().toString(36).substr(2, 9),
       name: file.name,
@@ -53,6 +55,7 @@ export default function FileUploadLayout({
         );
 
         setUploads((prev) => prev.filter((u) => u.id !== upload.id));
+
         console.log(`Uploaded: ${upload.name}`);
         toast({
           variant: "default",
@@ -64,6 +67,13 @@ export default function FileUploadLayout({
         toast({
           variant: "destructive",
           description: `Error uploading ${upload.name}. Please try again.`,
+        });
+      } finally {
+        queryClient.invalidateQueries({
+          queryKey: [
+            ["userFiles", user?.email],
+            ["folderFiles", folderName, user?.email],
+          ],
         });
       }
     });
