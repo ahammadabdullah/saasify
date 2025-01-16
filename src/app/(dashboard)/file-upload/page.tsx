@@ -16,8 +16,13 @@ import { Label } from "@/components/ui/label";
 import { ImageGallery } from "@/components/file-upload/image-gallery";
 import { FolderList } from "@/components/file-upload/folder-list";
 import useGetUser from "@/hooks/use-getUser";
-import { getUserFiles } from "@/lib/supabase/file-upload/fileUpload";
+import {
+  deleteFile,
+  downloadFile,
+  getUserFiles,
+} from "@/lib/supabase/file-upload/fileUpload";
 import { FileList } from "@/components/file-upload/file-list";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 // Mock data for demonstration
 const mockImages = [
@@ -68,14 +73,12 @@ export default function FileUploadPage() {
         const data = await getUserFiles(user.email);
         console.log("Fetched data", data);
 
-        // Categorize files into root and folders
         const rootFiles = [] as any;
         const folderFiles = {} as any;
 
         data.forEach((file) => {
           const filePath = file.file_path;
 
-          // If the file path contains a folder, categorize it accordingly
           if (filePath.includes("/")) {
             const [folderName, fileName] = filePath.split("/", 2);
             if (!folderFiles[folderName]) {
@@ -87,7 +90,6 @@ export default function FileUploadPage() {
           }
         });
 
-        // Update the state
         setFiles(rootFiles);
         setFolders(
           Object.keys(folderFiles).map((folderName) => ({
@@ -95,7 +97,6 @@ export default function FileUploadPage() {
             name: folderName,
           }))
         );
-        // Optionally, store the folder-based files separately as well
         // setFolderFiles(folderFiles);
       }
     };
@@ -104,13 +105,16 @@ export default function FileUploadPage() {
 
   console.log(files);
 
-  const handleDeleteFile = (id: string) => {
-    setFiles((prev: any) => prev.filter((file: any) => file.id !== id));
+  const handleDeleteFile = async (filePath: string, id: string) => {
+    const res = await deleteFile(filePath, id);
+    setFiles((prevFiles: any) =>
+      prevFiles.filter((file: any) => file.file_path !== filePath)
+    );
   };
 
-  const handleDownloadFile = (id: string) => {
-    // Implement file download logic here
-    console.log(`Downloading file with id: ${id}`);
+  const handleDownloadFile = async (filePath: string) => {
+    const res = await downloadFile(filePath);
+    console.log(res);
   };
   return (
     <div className="space-y-8 mt-6">

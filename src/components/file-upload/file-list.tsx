@@ -12,11 +12,12 @@ import { FileIcon } from "@/components/file-upload/file-icon";
 interface File {
   id: string;
   fileName: string;
+  file_path: string;
 }
 
 interface FileListProps {
   files: File[];
-  onDeleteFile: (id: string) => void;
+  onDeleteFile: (file_path: string, id: string) => void;
   onDownloadFile: (id: string) => void;
 }
 
@@ -51,11 +52,15 @@ export function FileList({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => onDownloadFile(file.id)}>
+                  <DropdownMenuItem
+                    onClick={() => onDownloadFile(file.file_path)}
+                  >
                     <Download className="mr-2 h-4 w-4" />
                     <span>Download</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onDeleteFile(file.id)}>
+                  <DropdownMenuItem
+                    onClick={() => onDeleteFile(file.file_path, file.id)}
+                  >
                     <Trash className="mr-2 h-4 w-4" />
                     <span>Delete</span>
                   </DropdownMenuItem>

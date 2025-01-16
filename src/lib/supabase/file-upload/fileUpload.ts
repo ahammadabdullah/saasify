@@ -77,11 +77,59 @@ export const getUserFiles = async (userEmail: string) => {
     .select("file_path, created_at, id")
     .eq("user_email", userEmail);
 
-  console.log("------------------", data, "------------------");
   if (error) {
     console.error("Error fetching user files:", error);
     return [];
   }
 
   return data;
+};
+
+export const deleteFile = async (filePath: string, fileId: string) => {
+  try {
+    const supabase = getSupabaseBrowserClient();
+
+    const { error: storageError } = await supabase.storage
+      .from("saasify")
+      .remove([filePath]);
+
+    if (storageError) {
+      console.error("Error deleting file from storage:", storageError.message);
+      return;
+    }
+
+    const { error: dbError } = await supabase
+      .from("user_files")
+      .delete()
+      .eq("id", fileId);
+    if (dbError) {
+      console.error(
+        "Error deleting file record from database:",
+        dbError.message
+      );
+      return;
+    }
+    console.log("File deleted successfully");
+  } catch (err) {
+    console.error("Unexpected error deleting file:", err);
+  }
+};
+
+export const downloadFile = async (filePath: string) => {
+  const supabase = getSupabaseBrowserClient();
+  const { data, error } = await supabase.storage
+    .from("saasify")
+    .download(filePath);
+
+  if (error) {
+    console.error("Error downloading file:", error.message);
+    return;
+  }
+
+  const url = window.URL.createObjectURL(data);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filePath.split("/").pop() || "download";
+  a.click();
+  a.remove();
 };
