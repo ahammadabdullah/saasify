@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { FileList } from "@/components/file-upload/file-list";
 import useGetUser from "@/hooks/use-getUser";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   deleteFile,
   downloadFile,
@@ -60,8 +60,7 @@ export default function FolderContentsPage() {
   };
 
   const handleDownloadFile = async (filePath: string) => {
-    const res = await downloadFile(filePath);
-    console.log(res);
+    await downloadFile(filePath);
   };
 
   return (
