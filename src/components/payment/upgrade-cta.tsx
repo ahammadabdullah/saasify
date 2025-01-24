@@ -15,20 +15,15 @@ import {
 import { ChevronDown, ChevronUp } from "lucide-react";
 import packages from "@/lib/packages";
 import Link from "next/link";
+import useGetUser from "@/hooks/use-getUser";
 
 interface UpgradeCTAProps {
-  customer: {
-    id: string;
-    email: string;
-    name: string;
-    lemon_customer_id: string;
-  };
   currentPlan: string | null | undefined;
 }
 
-export function UpgradeCTA({ customer, currentPlan }: UpgradeCTAProps) {
+export function UpgradeCTA({ currentPlan }: UpgradeCTAProps) {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(customer);
+  const [user] = useGetUser();
   const plans = packages.filter((p) => p.name !== currentPlan);
   return (
     <Card>
@@ -58,9 +53,7 @@ export function UpgradeCTA({ customer, currentPlan }: UpgradeCTAProps) {
                   ))}
                 </ul>
                 <Button className="w-full sm:w-auto">
-                  <Link
-                    href={plan.getSubscriptionLink(customer.lemon_customer_id)}
-                  >
+                  <Link href={plan.getSubscriptionLink(user?.id as string)}>
                     Upgrade to {plan.name}
                   </Link>
                 </Button>

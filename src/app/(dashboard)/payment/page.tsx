@@ -12,17 +12,24 @@ import useGetCustomer from "@/hooks/use-getCustomer";
 import { PaymentPageSkeleton } from "@/components/Skeletons/payment-page-skeleton";
 import { getCustomerSubscriptionDetails } from "@/lib/api/payment";
 import { useQuery } from "@tanstack/react-query";
+import useGetUser from "@/hooks/use-getUser";
+import { useEffect, useState } from "react";
 
 export default function PaymentPage() {
-  const [customer, isLoading] = useGetCustomer();
+  const [loading, setLoading] = useState(true);
+  const [user] = useGetUser();
   const { data, isLoading: IsFetchLoading } = useQuery({
-    queryKey: ["customerInfo", customer?.id],
+    queryKey: ["customerInfo", user?.id],
     queryFn: async () =>
-      await getCustomerSubscriptionDetails(customer?.lemon_customer_id),
-    enabled: customer?.lemon_customer_id ? true : false,
+      await getCustomerSubscriptionDetails(user?.id as string),
+    enabled: user?.id ? true : false,
   });
-  console.log("-------data----------", data);
-  if (isLoading || IsFetchLoading) return <PaymentPageSkeleton />;
+  useEffect(() => {
+    if (data) {
+      setLoading(false);
+    }
+  }, [data]);
+  if (IsFetchLoading || loading) return <PaymentPageSkeleton />;
   return (
     <ScrollArea className="flex-1">
       <div className="container px-4 py-6 md:px-6">
@@ -31,13 +38,13 @@ export default function PaymentPage() {
           <div className="space-y-6">
             <PayNowBanner currentDue={data?.currentDue} />
             <ActiveSubscription currentPlan={data?.currentPlan} />
-            <UpgradeCTA customer={customer} currentPlan={data?.currentPlan} />
+            <UpgradeCTA currentPlan={data?.currentPlan} />
             <CancelSubscription />
           </div>
           {/* Right Column */}
           <div className="space-y-6">
             <BillingMethod billingMethod={data?.billingMethod} />
-            <Invoices invoices={data?.lastInvoices} />
+            {/* <Invoices invoices={data?.lastInvoices} /> */}
           </div>
         </div>
       </div>

@@ -5,63 +5,53 @@ import {
   lemonSqueezySetup,
   listSubscriptions,
 } from "@lemonsqueezy/lemonsqueezy.js";
+import { createSupabaseServerClient } from "../supabase/server";
 
 lemonSqueezySetup({
   apiKey: process.env.LEMON_API_KEY,
 });
 
-export async function getCustomerSubscriptionDetails(customerId: string) {
-  console.log("customerId", customerId);
+export async function getCustomerSubscriptionDetails(userId: string) {
   try {
-    const { data: SubscriptionList } = await listSubscriptions();
-    const customerSubscriptions = SubscriptionList?.data.filter(
-      (subscription) =>
-        subscription.attributes.customer_id === parseInt(customerId)
-    );
-    const latestSubscription = customerSubscriptions?.[0];
-    console.log(
-      "--------latestSubscription -------------",
-      customerSubscriptions
-    );
-    const currentPlan = latestSubscription?.attributes?.variant_name ?? null;
+    const supabase = await createSupabaseServerClient();
 
-    // Get the subscription ID
-    const subscriptionId = latestSubscription?.id;
+    const { data: subscriptionData, error: subscriptionError } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(1);
 
-    // Fetch the subscription invoices
-    const { data: invoicesData } = await listSubscriptionInvoices({
-      filter: { subscriptionId },
-    });
+    if (subscriptionError) {
+      console.error("Error fetching subscriptions:", subscriptionError);
+      return null;
+    }
 
-    // Retrieve the latest invoice if available
-    const latestInvoice =
-      invoicesData?.data && invoicesData?.data?.length > 0
-        ? invoicesData?.data[0]
-        : null;
+    if (!subscriptionData || subscriptionData.length === 0) {
+      console.warn("No subscriptions found for this customer.");
+      return null;
+    }
 
-    // Calculate the current due amount based on invoice status
+    const latestSubscription = subscriptionData[0];
+    const currentPlan = latestSubscription?.variant_name ?? null;
+
     let currentDue = 0;
-    if (latestInvoice?.attributes?.status !== "paid") {
-      currentDue = latestInvoice?.attributes?.total_formatted
-        ? parseFloat(latestInvoice.attributes.total_formatted)
+    if (latestSubscription?.status !== "paid") {
+      currentDue = latestSubscription?.amount_due
+        ? parseFloat(latestSubscription.amount_due)
         : 0;
     }
-    // console.log("--------curr plan ------------", latestSubscription);
 
-    // Extract billing method details
     const billingMethod = {
-      type: latestSubscription?.attributes?.card_brand ?? null,
-      last4: latestSubscription?.attributes?.card_last_four ?? null,
+      type: latestSubscription?.card_brand ?? null,
+      last4: latestSubscription?.card_last_four ?? null,
+      renewAt: latestSubscription?.renews_at ?? null,
     };
-
-    // Get the last few invoices (up to 5)
-    const lastInvoices = invoicesData?.data.slice(0, 5) ?? [];
 
     return {
       currentPlan,
       currentDue,
       billingMethod,
-      lastInvoices,
     };
   } catch (error) {
     console.error("Error fetching subscription details:", error);
