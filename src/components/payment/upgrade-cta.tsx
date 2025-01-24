@@ -16,9 +16,20 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import packages from "@/lib/packages";
 import Link from "next/link";
 
-export function UpgradeCTA() {
-  const [isOpen, setIsOpen] = useState(false);
+interface UpgradeCTAProps {
+  customer: {
+    id: string;
+    email: string;
+    name: string;
+    lemon_customer_id: string;
+  };
+  currentPlan: string | null | undefined;
+}
 
+export function UpgradeCTA({ customer, currentPlan }: UpgradeCTAProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  console.log(customer);
+  const plans = packages.filter((p) => p.name !== currentPlan);
   return (
     <Card>
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -37,7 +48,7 @@ export function UpgradeCTA() {
         </CollapsibleTrigger>
         <CollapsibleContent>
           <CardContent className="p-4 sm:p-6  flex justify-around space-y-4 sm:space-y-0 sm:flex-wrap">
-            {packages.map((plan, index) => (
+            {plans.map((plan, index) => (
               <div key={index} className="mb-4 last:mb-0">
                 <CardTitle className="text-lg mb-2">{plan.name}</CardTitle>
                 <CardDescription className="mb-2">{plan.price}</CardDescription>
@@ -47,7 +58,9 @@ export function UpgradeCTA() {
                   ))}
                 </ul>
                 <Button className="w-full sm:w-auto">
-                  <Link href={plan.subscriptionLink}>
+                  <Link
+                    href={plan.getSubscriptionLink(customer.lemon_customer_id)}
+                  >
                     Upgrade to {plan.name}
                   </Link>
                 </Button>

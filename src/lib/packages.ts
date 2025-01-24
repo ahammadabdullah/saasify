@@ -1,7 +1,7 @@
 export const packages = [
   {
     name: "Starter",
-    price: "$9 /month",
+    price: "$0 /month",
     description: "Perfect for individuals and small projects",
     features: [
       "50+ icons for design",
@@ -11,7 +11,9 @@ export const packages = [
       "Single 404 page design",
     ],
     subscriptionLink:
-      "https://proggo.lemonsqueezy.com/buy/75cb1008-afcc-4b3b-ba15-8aa772b7a869",
+      "https://proggo.lemonsqueezy.com/buy/22976bc8-ca9f-4119-874b-a5e05039a117",
+    getSubscriptionLink: (customerId: string) =>
+      `https://proggo.lemonsqueezy.com/buy/22976bc8-ca9f-4119-874b-a5e05039a117?checkout[customer_id]=${customerId}`,
   },
   {
     name: "Professional",
@@ -25,7 +27,9 @@ export const packages = [
       "3 banner styles",
     ],
     subscriptionLink:
-      "https://proggo.lemonsqueezy.com/buy/b8ee9ca7-3403-4d0f-a52e-955f02368577",
+      "https://proggo.lemonsqueezy.com/buy/7d50cd10-912d-420d-a8ae-8354738bab4f",
+    getSubscriptionLink: (customerId: string) =>
+      `https://proggo.lemonsqueezy.com/buy/7d50cd10-912d-420d-a8ae-8354738bab4f?checkout[customer_id]=${customerId}`,
   },
   {
     name: "Enterprise",
@@ -39,7 +43,9 @@ export const packages = [
       "Unlimited button variants",
     ],
     subscriptionLink:
-      "https://proggo.lemonsqueezy.com/buy/d2300d01-caa9-4957-ab42-81cfb934aa3a",
+      "https://proggo.lemonsqueezy.com/buy/422e1c3a-cae5-4824-a2c2-1e9ee4ff836c",
+    getSubscriptionLink: (customerId: string) =>
+      `https://proggo.lemonsqueezy.com/buy/422e1c3a-cae5-4824-a2c2-1e9ee4ff836c?checkout[customer_id]=${customerId}`,
   },
 ];
 

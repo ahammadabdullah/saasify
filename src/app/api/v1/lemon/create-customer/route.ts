@@ -43,7 +43,6 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
-
     return NextResponse.json({ customerId: data.data.id });
   } else {
     return NextResponse.json(

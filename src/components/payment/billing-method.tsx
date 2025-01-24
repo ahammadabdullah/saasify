@@ -8,7 +8,16 @@ import {
 } from "@/components/ui/card";
 import { CreditCard } from "lucide-react";
 
-export function BillingMethod() {
+export function BillingMethod({
+  billingMethod,
+}: {
+  billingMethod:
+    | {
+        type: string | null;
+        last4: string | null;
+      }
+    | undefined;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -20,8 +29,13 @@ export function BillingMethod() {
           <div className="flex items-center">
             <CreditCard className="h-6 w-6 mr-2" />
             <div>
-              <p className="font-medium">Visa ending in 1234</p>
-              <p className="text-sm text-muted-foreground">Expires 12/2025</p>
+              {billingMethod?.type ? (
+                <p className="font-medium">
+                  {billingMethod?.type} ending in {billingMethod?.last4}
+                </p>
+              ) : (
+                <p className="font-bold">No payment method found</p>
+              )}
             </div>
           </div>
           <Button variant="outline" className="w-full sm:w-auto">

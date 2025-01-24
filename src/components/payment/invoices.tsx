@@ -16,13 +16,14 @@ import {
 } from "@/components/ui/table";
 import { Download } from "lucide-react";
 
-const invoices = [
-  { id: "INV-001", date: "2023-05-01", amount: "$9.99", status: "Paid" },
-  { id: "INV-002", date: "2023-06-01", amount: "$9.99", status: "Paid" },
-  { id: "INV-003", date: "2023-07-01", amount: "$9.99", status: "Pending" },
-];
+// const invoices = [
+//   { id: "INV-001", date: "2023-05-01", amount: "$9.99", status: "Paid" },
+//   { id: "INV-002", date: "2023-06-01", amount: "$9.99", status: "Paid" },
+//   { id: "INV-003", date: "2023-07-01", amount: "$9.99", status: "Pending" },
+// ];
 
-export function Invoices() {
+export function Invoices({ invoices }: { invoices: any[] | undefined }) {
+  console.log("---------invoices---------", invoices);
   return (
     <Card>
       <CardHeader>
@@ -42,12 +43,12 @@ export function Invoices() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {invoices.map((invoice) => (
+              {invoices?.map((invoice) => (
                 <TableRow key={invoice.id}>
                   <TableCell className="font-medium">{invoice.id}</TableCell>
-                  <TableCell>{invoice.date}</TableCell>
-                  <TableCell>{invoice.amount}</TableCell>
-                  <TableCell>{invoice.status}</TableCell>
+                  <TableCell>{invoice.attributes.updated_at}</TableCell>
+                  <TableCell>{invoice.attributes.subtotal_formatted}</TableCell>
+                  <TableCell>{invoice.attributes.status_formatted}</TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="sm">
                       <Download className="h-4 w-4" />
@@ -56,6 +57,13 @@ export function Invoices() {
                   </TableCell>
                 </TableRow>
               ))}
+              {(invoices?.length === 0 || invoices === undefined) && (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center">
+                    No invoices found
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>

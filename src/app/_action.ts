@@ -51,7 +51,6 @@ export async function signUpWithEmailAndPassword({
       }
     );
     const data = await res.json();
-    console.log("------create-customer-data------", data);
     if (!data.customerId) {
       return {
         success: false,
