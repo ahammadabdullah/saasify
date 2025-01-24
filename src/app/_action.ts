@@ -82,7 +82,6 @@ export async function signInWithEmailAndPassword(data: LoginUserInput) {
     };
   }
   revalidatePath("/", "layout");
-  console.log(authData, "-------------");
 
   return { success: true, data: authData };
 }

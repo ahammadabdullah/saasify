@@ -1,105 +1,8 @@
 "use server";
 
-// const getCurrentSubscription = async (customerId: string) => {
-//   const res = await fetch(
-//     `${process.env.LEMON_URL}/subscriptions?filter[customer_id]=${customerId}`,
-//     {
-//       headers: {
-//         Authorization: `Bearer YOUR_API_KEY`,
-//         "Content-Type": "application/json",
-//       },
-//     }
-//   );
-
-//   const data = await res.json();
-//   const activeSubscription = data.data.find(
-//     (sub: any) => sub.attributes.status === "active"
-//   );
-
-//   return activeSubscription
-//     ? {
-//         planName: activeSubscription.attributes.name,
-//         price: activeSubscription.attributes.price,
-//         nextBillingDate: activeSubscription.attributes.renews_at,
-//       }
-//     : null;
-// };
-
-// const getBillingMethod = async (customerId: string) => {
-//   const res = await fetch(
-//     `${process.env.LEMON_URL}/subscriptions?filter[customer_id]=${customerId}`,
-//     {
-//       headers: {
-//         Authorization: `Bearer YOUR_API_KEY`,
-//         "Content-Type": "application/json",
-//       },
-//     }
-//   );
-
-//   const data = await res.json();
-//   const activeSubscription = data.data.find(
-//     (sub: any) => sub.attributes.status === "active"
-//   );
-
-//   return activeSubscription
-//     ? {
-//         paymentMethod: activeSubscription.attributes.payment_method,
-//         last4: activeSubscription.attributes.card_last4,
-//       }
-//     : null; // No active billing method
-// };
-
-// const getDueStatus = async (customerId: string) => {
-//   const res = await fetch(
-//     `${process.env.LEMON_URL}/subscriptions?filter[customer_id]=${customerId}`,
-//     {
-//       headers: {
-//         Authorization: `Bearer YOUR_API_KEY`,
-//         "Content-Type": "application/json",
-//       },
-//     }
-//   );
-
-//   const data = await res.json();
-//   const overdueSubscription = data.data.find(
-//     (sub: any) => sub.attributes.status === "past_due"
-//   );
-
-//   return overdueSubscription
-//     ? {
-//         dueAmount: overdueSubscription.attributes.price,
-//         dueDate: overdueSubscription.attributes.ends_at,
-//       }
-//     : null;
-// };
-// const getUserBillingDetails = async (customerId: string) => {
-//   try {
-//     if (!customerId) {
-//       throw new Error("Customer ID not found");
-//     }
-
-//     const [subscription, billingMethod, dueStatus] = await Promise.all([
-//       getCurrentSubscription(customerId),
-//       getBillingMethod(customerId),
-//       getDueStatus(customerId),
-//     ]);
-//     return {
-//       subscription,
-//       billingMethod,
-//       dueStatus,
-//     };
-//   } catch (error) {
-//     console.error("Error fetching user billing details:", error);
-//     return null;
-//   }
-// };
 import {
-  getSubscription,
   listSubscriptionInvoices,
-  cancelSubscription,
-  updateSubscription,
   lemonSqueezySetup,
-  getCustomer,
   listSubscriptions,
 } from "@lemonsqueezy/lemonsqueezy.js";
 
@@ -108,6 +11,7 @@ lemonSqueezySetup({
 });
 
 export async function getCustomerSubscriptionDetails(customerId: string) {
+  console.log("customerId", customerId);
   try {
     const { data: SubscriptionList } = await listSubscriptions();
     const customerSubscriptions = SubscriptionList?.data.filter(
@@ -115,7 +19,10 @@ export async function getCustomerSubscriptionDetails(customerId: string) {
         subscription.attributes.customer_id === parseInt(customerId)
     );
     const latestSubscription = customerSubscriptions?.[0];
-
+    console.log(
+      "--------latestSubscription -------------",
+      customerSubscriptions
+    );
     const currentPlan = latestSubscription?.attributes?.variant_name ?? null;
 
     // Get the subscription ID
@@ -135,7 +42,9 @@ export async function getCustomerSubscriptionDetails(customerId: string) {
     // Calculate the current due amount based on invoice status
     let currentDue = 0;
     if (latestInvoice?.attributes?.status !== "paid") {
-      currentDue = latestInvoice?.attributes?.total_usd ?? 0;
+      currentDue = latestInvoice?.attributes?.total_formatted
+        ? parseFloat(latestInvoice.attributes.total_formatted)
+        : 0;
     }
     // console.log("--------curr plan ------------", latestSubscription);
 

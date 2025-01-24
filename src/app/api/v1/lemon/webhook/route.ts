@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import crypto from "crypto";
+import { revalidatePath } from "next/cache";
 
 const LEMON_WEBHOOK_SECRET = process.env.LEMON_WEBHOOK_SECRET || "";
 
@@ -16,9 +17,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
   }
 
-  const payload = JSON.parse(body); // Now safely parse the body as JSON
+  const payload = JSON.parse(body);
   const supabase = await createSupabaseServerClient();
-
+  console.log("Webhook received", payload);
   if (payload.event === "subscription.created") {
     const { id: subscriptionId, attributes } = payload.data;
     const { customer_id: lemonCustomerId, status } = attributes;
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
         status,
       })
       .eq("lemon_customer_id", lemonCustomerId);
+    revalidatePath("/");
 
     if (error) {
       return NextResponse.json(
@@ -49,6 +51,7 @@ export async function POST(req: NextRequest) {
         status,
       })
       .eq("lemon_customer_id", lemonCustomerId);
+    revalidatePath("/");
 
     if (error) {
       return NextResponse.json(
@@ -60,6 +63,7 @@ export async function POST(req: NextRequest) {
   if (payload.event === "subscription.deleted") {
     const { id: subscriptionId, attributes } = payload.data;
     const { customer_id: lemonCustomerId, status } = attributes;
+    revalidatePath("/");
 
     const { error } = await supabase
       .from("customers")

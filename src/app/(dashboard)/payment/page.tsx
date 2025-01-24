@@ -17,7 +17,9 @@ export default function PaymentPage() {
   const [customer, isLoading] = useGetCustomer();
   const { data, isLoading: IsFetchLoading } = useQuery({
     queryKey: ["customerInfo", customer?.id],
-    queryFn: () => getCustomerSubscriptionDetails("4845363"),
+    queryFn: async () =>
+      await getCustomerSubscriptionDetails(customer?.lemon_customer_id),
+    enabled: customer?.lemon_customer_id ? true : false,
   });
   console.log("-------data----------", data);
   if (isLoading || IsFetchLoading) return <PaymentPageSkeleton />;
