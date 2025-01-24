@@ -35,8 +35,6 @@ export async function signUpWithEmailAndPassword({
   const userId = user?.id;
   const email = user?.email;
   const user_name = user?.user_metadata?.name || "";
-  console.log("------userInfo------", userId, email, user_name);
-  console.log("------Base URL------", process.env.NEXT_PUBLIC_BASE_URL);
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/lemon/create-customer`,
