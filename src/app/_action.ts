@@ -53,8 +53,15 @@ export async function signUpWithEmailAndPassword({
       }
     );
     const data = await res.json();
-    // console.log("-----res--------", res, "-------res------");
-    console.log("-------data------", data, "-------data------");
+    console.log("------create-customer-data------", data);
+    if (!data.customerId) {
+      return {
+        success: false,
+        error: {
+          message: "Failed to create account",
+        },
+      };
+    }
   } catch (error) {
     console.log(error);
   }

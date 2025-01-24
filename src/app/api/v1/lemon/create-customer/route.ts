@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
-  console.log("api hit-----------------");
   const { email, name, userId } = await req.json();
-  console.log("-------create-customer-req-data------", email, name, userId);
   const supabase = await createSupabaseServerClient();
   const response = await fetch(`${process.env.LEMON_URL}/customers`, {
     method: "POST",
@@ -22,7 +20,7 @@ export async function POST(req: NextRequest) {
         relationships: {
           store: {
             data: {
-              id: process.env.LEMON_STORE_ID, // Replace with your store ID
+              id: process.env.LEMON_STORE_ID,
               type: "stores",
             },
           },
@@ -32,11 +30,7 @@ export async function POST(req: NextRequest) {
   });
 
   const data = await response.json();
-  console.log(
-    "-------create-customer-data------",
-    data,
-    "-------create-customer-data------"
-  );
+
   if (data?.data) {
     const { error } = await supabase.from("customers").insert({
       id: userId,
