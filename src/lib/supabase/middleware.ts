@@ -39,6 +39,7 @@ export async function updateSession(request: NextRequest) {
     "/forgot-password",
     "/reset-password",
     "/auth",
+    "/api/v1/lemon/create-customer",
   ];
   const protectedRoutes = authRoutes.every(
     (path) => !request.nextUrl.pathname.startsWith(path)

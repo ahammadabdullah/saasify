@@ -1,6 +1,5 @@
 "use server";
 
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { CreateUserInput, LoginUserInput } from "@/lib/user-schema";
 import { revalidatePath } from "next/cache";
@@ -14,7 +13,7 @@ export async function signUpWithEmailAndPassword({
 }) {
   const supabase = await createSupabaseServerClient();
   const name = data.name;
-  const { error } = await supabase.auth.signUp({
+  const { error, data: authData } = await supabase.auth.signUp({
     email: data.email,
     password: data.password,
     options: {
@@ -31,6 +30,33 @@ export async function signUpWithEmailAndPassword({
         message: error.code,
       },
     };
+  }
+  const { user } = authData;
+  const userId = user?.id;
+  const email = user?.email;
+  const user_name = user?.user_metadata?.name || "";
+  console.log("------userInfo------", userId, email, user_name);
+  console.log("------Base URL------", process.env.NEXT_PUBLIC_BASE_URL);
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/lemon/create-customer`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          name: user_name,
+          userId,
+        }),
+      }
+    );
+    const data = await res.json();
+    // console.log("-----res--------", res, "-------res------");
+    console.log("-------data------", data, "-------data------");
+  } catch (error) {
+    console.log(error);
   }
   revalidatePath("/", "layout");
   return { success: true };
@@ -52,6 +78,8 @@ export async function signInWithEmailAndPassword(data: LoginUserInput) {
     };
   }
   revalidatePath("/", "layout");
+  console.log(authData, "-------------");
+
   return { success: true, data: authData };
 }
 
