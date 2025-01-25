@@ -1,10 +1,6 @@
 "use server";
 
-import {
-  listSubscriptionInvoices,
-  lemonSqueezySetup,
-  listSubscriptions,
-} from "@lemonsqueezy/lemonsqueezy.js";
+import { lemonSqueezySetup } from "@lemonsqueezy/lemonsqueezy.js";
 import { createSupabaseServerClient } from "../supabase/server";
 
 lemonSqueezySetup({
@@ -48,11 +44,11 @@ export async function getCustomerSubscriptionDetails(userId: string) {
       renewAt: latestSubscription?.renews_at ?? null,
     };
 
-    const invoiceList = await listSubscriptionInvoices({
-      filter: {
-        subscriptionId: latestSubscription.subscription_id,
-      },
-    });
+    const { data: invoiceList } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
     return {
       currentPlan,
       currentDue,

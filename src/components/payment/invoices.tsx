@@ -23,6 +23,7 @@ import { Download } from "lucide-react";
 // ];
 
 export function Invoices({ invoices }: { invoices: any[] | undefined }) {
+  console.log(invoices);
   return (
     <Card>
       <CardHeader>
@@ -45,9 +46,11 @@ export function Invoices({ invoices }: { invoices: any[] | undefined }) {
               {invoices?.map((invoice) => (
                 <TableRow key={invoice.id}>
                   <TableCell className="font-medium">{invoice.id}</TableCell>
-                  <TableCell>{invoice.attributes.updated_at}</TableCell>
-                  <TableCell>{invoice.attributes.subtotal_formatted}</TableCell>
-                  <TableCell>{invoice.attributes.status_formatted}</TableCell>
+                  <TableCell>
+                    {new Date(invoice.updated_at).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>{invoice.total}</TableCell>
+                  <TableCell>{invoice.status}</TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="sm">
                       <Download className="h-4 w-4" />

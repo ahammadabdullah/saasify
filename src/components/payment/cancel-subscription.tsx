@@ -42,7 +42,7 @@ export function CancelSubscription() {
             variant="ghost"
             className="w-full flex justify-between items-center"
           >
-            <span>Want to cancel your subscription?</span>
+            <span>Cancel Subscription?</span>
             {isOpen ? (
               <ChevronUp className="h-4 w-4" />
             ) : (

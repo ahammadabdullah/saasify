@@ -8,7 +8,6 @@ import { ActiveSubscription } from "@/components/payment/active-subscription";
 import { CancelSubscription } from "@/components/payment/cancel-subscription";
 import { BillingMethod } from "@/components/payment/billing-method";
 import { Invoices } from "@/components/payment/invoices";
-import useGetCustomer from "@/hooks/use-getCustomer";
 import { PaymentPageSkeleton } from "@/components/Skeletons/payment-page-skeleton";
 import { getCustomerSubscriptionDetails } from "@/lib/api/payment";
 import { useQuery } from "@tanstack/react-query";
@@ -16,22 +15,24 @@ import useGetUser from "@/hooks/use-getUser";
 import { useEffect, useState } from "react";
 
 export default function PaymentPage() {
-  const [loading, setLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [user] = useGetUser();
-  const { data, isLoading: IsFetchLoading } = useQuery({
+
+  const { data, isLoading: isQueryLoading } = useQuery({
     queryKey: ["customerInfo", user?.id],
     queryFn: async () =>
       await getCustomerSubscriptionDetails(user?.id as string),
-    enabled: user?.id ? true : false,
+    enabled: !!user?.id,
   });
+
   useEffect(() => {
-    if (!IsFetchLoading) {
-      setLoading(false);
+    if (!isQueryLoading && user?.id) {
+      setIsInitialLoading(false);
     }
-  }, [IsFetchLoading]);
-  console.log("isFetchLoading", IsFetchLoading);
-  console.log("loading", loading);
-  if (IsFetchLoading || loading) return <PaymentPageSkeleton />;
+  }, [isQueryLoading, user?.id]);
+
+  if (isInitialLoading) return <PaymentPageSkeleton />;
+
   return (
     <ScrollArea className="flex-1">
       <div className="container px-4 py-6 md:px-6">
@@ -46,7 +47,7 @@ export default function PaymentPage() {
           {/* Right Column */}
           <div className="space-y-6">
             <BillingMethod billingMethod={data?.billingMethod} />
-            <Invoices invoices={data?.invoiceList?.data?.data} />
+            <Invoices invoices={data?.invoiceList ?? []} />
           </div>
         </div>
       </div>
