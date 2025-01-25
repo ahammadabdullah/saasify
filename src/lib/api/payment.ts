@@ -48,10 +48,16 @@ export async function getCustomerSubscriptionDetails(userId: string) {
       renewAt: latestSubscription?.renews_at ?? null,
     };
 
+    const invoiceList = await listSubscriptionInvoices({
+      filter: {
+        subscriptionId: latestSubscription.subscription_id,
+      },
+    });
     return {
       currentPlan,
       currentDue,
       billingMethod,
+      invoiceList,
     };
   } catch (error) {
     console.error("Error fetching subscription details:", error);

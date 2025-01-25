@@ -44,7 +44,7 @@ export default function PaymentPage() {
           {/* Right Column */}
           <div className="space-y-6">
             <BillingMethod billingMethod={data?.billingMethod} />
-            {/* <Invoices invoices={data?.lastInvoices} /> */}
+            <Invoices invoices={data?.invoiceList?.data?.data} />
           </div>
         </div>
       </div>

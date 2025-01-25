@@ -53,7 +53,10 @@ export function UpgradeCTA({ currentPlan }: UpgradeCTAProps) {
                   ))}
                 </ul>
                 <Button className="w-full sm:w-auto">
-                  <Link href={plan.getSubscriptionLink(user?.id as string)}>
+                  <Link
+                    target="_blank"
+                    href={plan.getSubscriptionLink(user?.id as string)}
+                  >
                     Upgrade to {plan.name}
                   </Link>
                 </Button>

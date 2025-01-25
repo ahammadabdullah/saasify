@@ -23,7 +23,6 @@ import { Download } from "lucide-react";
 // ];
 
 export function Invoices({ invoices }: { invoices: any[] | undefined }) {
-  console.log("---------invoices---------", invoices);
   return (
     <Card>
       <CardHeader>
