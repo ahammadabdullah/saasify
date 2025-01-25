@@ -25,10 +25,12 @@ export default function PaymentPage() {
     enabled: user?.id ? true : false,
   });
   useEffect(() => {
-    if (data) {
+    if (!IsFetchLoading) {
       setLoading(false);
     }
-  }, [data]);
+  }, [IsFetchLoading]);
+  console.log("isFetchLoading", IsFetchLoading);
+  console.log("loading", loading);
   if (IsFetchLoading || loading) return <PaymentPageSkeleton />;
   return (
     <ScrollArea className="flex-1">
@@ -39,7 +41,7 @@ export default function PaymentPage() {
             <PayNowBanner currentDue={data?.currentDue} />
             <ActiveSubscription currentPlan={data?.currentPlan} />
             <UpgradeCTA currentPlan={data?.currentPlan} />
-            <CancelSubscription />
+            {data?.currentPlan && <CancelSubscription />}
           </div>
           {/* Right Column */}
           <div className="space-y-6">

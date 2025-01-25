@@ -16,8 +16,16 @@ export function ActiveSubscription({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Current Subscription</CardTitle>
-        <CardDescription>Your active plan</CardDescription>
+        {plan ? (
+          <>
+            <CardTitle>Current Subscription</CardTitle>
+            <CardDescription>Your active plan</CardDescription>
+          </>
+        ) : (
+          <>
+            <CardTitle>You are not subscribed yet</CardTitle>
+          </>
+        )}
       </CardHeader>
       <CardContent>
         <p className="font-bold">{plan?.name}</p>
