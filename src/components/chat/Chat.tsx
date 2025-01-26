@@ -20,7 +20,7 @@ const MiddlePanel = dynamic(
 );
 
 const RightPanel = dynamic(
-  () => import("@/components/right-panel").then((mod) => mod.RightPanel),
+  () => import("@/components/chat/RightPanel").then((mod) => mod.RightPanel),
   { loading: () => <RightPanelSkeleton />, ssr: false }
 );
 

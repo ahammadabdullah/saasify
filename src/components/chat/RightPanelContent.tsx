@@ -47,8 +47,8 @@ export function RightPanelContent({
   code,
   setCode,
 }: {
-  code: string;
-  setCode: (code: string) => void;
+  code?: string;
+  setCode?: (code: string) => void;
 }) {
   const [isSplit, setIsSplit] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -111,11 +111,11 @@ render(<LoadingButton />);
   useEffect(() => {
     if (code) {
       // Extract the component definition without imports
+      setCodeContent(code);
       const fullCode = code
         .replace(/import\s+.*?;?\n/g, "")
         .replace(/export\s+(default\s+)?\w+\s*;\n?/g, "")
         .trim();
-
       // Add the render function for the preview content
       const previewCode = `${fullCode}\n\nrender(<${getComponentName(
         fullCode
