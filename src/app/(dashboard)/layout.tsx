@@ -32,7 +32,7 @@ export default function RootLayout({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className={`flex max-h-screen `}>
+      <div className={`flex h-screen`}>
         <Suspense>
           <LeftPanel
             collapsed={leftPanelCollapsed}

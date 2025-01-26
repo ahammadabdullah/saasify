@@ -5,10 +5,7 @@ import { X } from "lucide-react";
 import { VerticalTabs } from "../right-panel/VerticalTabs";
 import { HorizontalTabs } from "../right-panel/HorizontalTabs";
 import { LiveProvider, LiveError, LivePreview } from "react-live";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"; // Use ES Module version
 
-// Define the scope for LiveProvider
 const scope = {
   React,
   useState,
@@ -110,13 +107,11 @@ render(<LoadingButton />);
 
   useEffect(() => {
     if (code) {
-      // Extract the component definition without imports
       setCodeContent(code);
       const fullCode = code
         .replace(/import\s+.*?;?\n/g, "")
         .replace(/export\s+(default\s+)?\w+\s*;\n?/g, "")
         .trim();
-      // Add the render function for the preview content
       const previewCode = `${fullCode}\n\nrender(<${getComponentName(
         fullCode
       )} />);`;

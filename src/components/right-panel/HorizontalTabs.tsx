@@ -50,7 +50,7 @@ export function HorizontalTabs({
           </Button>
         </div>
       </div>
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden h-full">
         <TabsContent value="preview" className="h-full m-0">
           <ScrollArea className="h-full">
             <div className="p-4">
@@ -59,7 +59,7 @@ export function HorizontalTabs({
           </ScrollArea>
         </TabsContent>
         <TabsContent value="code" className="h-full m-0">
-          <ScrollArea className="h-full">
+          <ScrollArea className="h-full md:h-[calc(100vh-150px)]">
             <div className="p-4 relative">
               <CopyButton text={codeContent} />
               <SyntaxHighlighter
