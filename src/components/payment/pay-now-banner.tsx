@@ -81,7 +81,7 @@ export function PayNowBanner({
                   <Loader className="animate-spin" />
                 </span>
               ) : (
-                "Early Payment"
+                "Pay Early"
               )}
             </Button>
           </CardContent>

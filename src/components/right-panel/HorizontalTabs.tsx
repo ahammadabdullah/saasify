@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import type React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ExpandablePreview } from "./ExpandablePreview";
@@ -51,24 +51,34 @@ export function HorizontalTabs({
         </div>
       </div>
       <div className="flex-1 overflow-hidden">
-        <TabsContent value="preview" className="h-full m-0 w-full">
+        <TabsContent value="preview" className="h-full m-0">
           <ScrollArea className="h-full">
-            <div className="p-2 ">
+            <div className="p-4">
               <ExpandablePreview content={previewContent} onExpand={onExpand} />
             </div>
           </ScrollArea>
         </TabsContent>
         <TabsContent value="code" className="h-full m-0">
           <ScrollArea className="h-full">
-            <div className="p-2 relative">
+            <div className="p-4 relative">
               <CopyButton text={codeContent} />
               <SyntaxHighlighter
                 language="tsx"
+                lineProps={{
+                  style: { whiteSpace: "pre-wrap" },
+                }}
                 style={vscDarkPlus}
                 showLineNumbers
-                customStyle={{ borderRadius: "0.5rem" }}
+                wrapLines={true}
+                wrapLongLines={true}
+                customStyle={{
+                  margin: 0,
+                  paddingRight: "1rem",
+                  borderRadius: "0.5rem",
+                  maxHeight: "none",
+                }}
               >
-                {codeContent}
+                {codeContent || "Placeholder Code"}
               </SyntaxHighlighter>
             </div>
           </ScrollArea>

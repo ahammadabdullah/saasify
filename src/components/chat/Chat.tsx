@@ -23,6 +23,12 @@ const RightPanel = dynamic(
   () => import("@/components/right-panel").then((mod) => mod.RightPanel),
   { loading: () => <RightPanelSkeleton />, ssr: false }
 );
+
+export interface Message {
+  role: "user" | "assistant";
+  content: string;
+}
+
 export default function Chat(): JSX.Element {
   const [layout, setLayout] = useState<"layout1" | "layout2">("layout1");
   const [, setLeftPanelCollapsed] = useState(false);
@@ -34,6 +40,36 @@ export default function Chat(): JSX.Element {
   const [middlePanelLoaded, setMiddlePanelLoaded] = useState(false);
   const [rightPanelLoaded, setRightPanelLoaded] = useState(false);
   const searchParams = useSearchParams();
+
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content: "Hello! How can I help you today?",
+    },
+    {
+      role: "user",
+      content: "I need help with my account",
+    },
+    {
+      role: "assistant",
+      content: "Sure! What seems to be the problem?",
+    },
+    {
+      role: "user",
+      content: "I can't log in",
+    },
+    {
+      role: "assistant",
+      content: "I can help you with that. Can you provide me with your email?",
+    },
+    {
+      role: "user",
+      content: "Sure, it's johndoe@gmail.com",
+    },
+  ]);
+  const [model, setModel] = useState("gpt-4o");
+  const [input, setInput] = useState("");
+  const [code, setCode] = useState("");
 
   useEffect(() => {
     const layout = searchParams.get("layout");
@@ -67,12 +103,24 @@ export default function Chat(): JSX.Element {
       >
         <ResizablePanel defaultSize={isDesktop ? 60 : 100}>
           {layout === "layout1"
-            ? middlePanelLoaded && <MiddlePanel />
+            ? middlePanelLoaded && (
+                <MiddlePanel
+                  input={input}
+                  setInput={setInput}
+                  model={model}
+                  setModel={setModel}
+                  messages={messages}
+                  setMessages={setMessages}
+                  setCode={setCode}
+                />
+              )
             : rightPanelLoaded && (
                 <RightPanel
                   isSmallScreen={isSmallScreen}
                   isVisible={isRightPanelVisible}
                   setIsVisible={setIsRightPanelVisible}
+                  code={code}
+                  setCode={setCode}
                 />
               )}
         </ResizablePanel>
@@ -88,9 +136,21 @@ export default function Chat(): JSX.Element {
                   isSmallScreen={isSmallScreen}
                   isVisible={isRightPanelVisible}
                   setIsVisible={setIsRightPanelVisible}
+                  code={code}
+                  setCode={setCode}
                 />
               )
-            : middlePanelLoaded && <MiddlePanel />}
+            : middlePanelLoaded && (
+                <MiddlePanel
+                  input={input}
+                  setInput={setInput}
+                  model={model}
+                  setModel={setModel}
+                  messages={messages}
+                  setMessages={setMessages}
+                  setCode={setCode}
+                />
+              )}
         </ResizablePanel>
       </ResizablePanelGroup>
       {isSmallScreen && !isRightPanelVisible && (

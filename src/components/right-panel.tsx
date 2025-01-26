@@ -10,11 +10,15 @@ export function RightPanel({
   isVisible,
   setIsVisible,
   children,
+  code,
+  setCode,
 }: {
   isSmallScreen: boolean;
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   children?: React.ReactNode;
+  code: string;
+  setCode: (code: string) => void;
 }) {
   const togglePanel = () => setIsVisible(!isVisible);
 
@@ -30,7 +34,11 @@ export function RightPanel({
             : "lg:flex lg:h-full lg:relative"
         } w-full lg:w-auto lg:border-l bg-background flex flex-col`}
       >
-        {children ? children : <RightPanelContent />}
+        {children ? (
+          children
+        ) : (
+          <RightPanelContent code={code} setCode={setCode} />
+        )}
 
         {/* Close Button for Small Screen */}
         {isSmallScreen && (

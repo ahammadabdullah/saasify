@@ -1,11 +1,23 @@
-"use client";
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { X } from "lucide-react";
 import { VerticalTabs } from "../right-panel/VerticalTabs";
 import { HorizontalTabs } from "../right-panel/HorizontalTabs";
+import { LiveProvider, LiveError, LivePreview } from "react-live";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"; // Use ES Module version
+
+// Define the scope for LiveProvider
+const scope = {
+  React,
+  useState,
+  Button,
+  ScrollArea,
+  X,
+  VerticalTabs,
+  HorizontalTabs,
+};
 
 function ExpandedPreview({
   content,
@@ -31,19 +43,99 @@ function ExpandedPreview({
   );
 }
 
-export function RightPanelContent() {
+export function RightPanelContent({
+  code,
+  setCode,
+}: {
+  code: string;
+  setCode: (code: string) => void;
+}) {
   const [isSplit, setIsSplit] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
-  const [codeContent, setCodeContent] = useState(`// Sample code
-function greeting(name) {
-  return \`Hello, \${name}!\`;
-}
-console.log(greeting('World'));`);
 
+  // Separate states for code preview and preview content
+  const [codeContent, setCodeContent] = useState(`
+    import React, { useState } from "react";
+
+    function LoadingButton() {
+      const [loading, setLoading] = useState(true);
+
+      const handleClick = () => {
+        setLoading((prevLoading) => !prevLoading);
+      };
+
+      return (
+        <button
+          onClick={handleClick}
+          className="px-4 py-2 text-white bg-blue-500 
+                     rounded hover:bg-blue-600 focus:outline-none 
+                     focus:ring-2 focus:ring-blue-400"
+          disabled={loading}
+          aria-busy={loading}
+          aria-label={loading ? "Loading..." : "Submit"}
+        >
+          {loading ? "Loading..." : "Click Me"}
+        </button>
+      );
+    }
+
+    export default LoadingButton;
+  `);
+
+  const [previewCode, setPreviewCode] = useState(`
+    function LoadingButton() {
+      const [loading, setLoading] = useState(true);
+
+      const handleClick = () => {
+        setLoading((prevLoading) => !prevLoading);
+      };
+
+      return (
+        <button
+          onClick={handleClick}
+          className="px-4 py-2 text-white bg-blue-500 
+                     rounded hover:bg-blue-600 focus:outline-none 
+                     focus:ring-2 focus:ring-blue-400"
+          disabled={loading}
+          aria-busy={loading}
+          aria-label={loading ? "Loading..." : "Submit"}
+        >
+          {loading ? "Loading..." : "Click Me"}
+        </button>
+      );
+    }
+render(<LoadingButton />);
+  `);
+
+  useEffect(() => {
+    if (code) {
+      // Extract the component definition without imports
+      const fullCode = code
+        .replace(/import\s+.*?;?\n/g, "")
+        .replace(/export\s+(default\s+)?\w+\s*;\n?/g, "")
+        .trim();
+
+      // Add the render function for the preview content
+      const previewCode = `${fullCode}\n\nrender(<${getComponentName(
+        fullCode
+      )} />);`;
+      setPreviewCode(previewCode);
+    }
+  }, [code]);
+
+  // Helper function to extract the component name from the code
+  const getComponentName = (code: string): string => {
+    const match = code.match(/function\s+(\w+)\s*\(/);
+    return match ? match[1] : "Component";
+  };
+  console.log(previewCode);
   const previewContent = (
-    <div className="rounded-lg border p-4">
-      <div className="text-sm">Preview content will appear here</div>
+    <div className="w-full p-4 flex justify-center items-center">
+      <LiveProvider code={previewCode} noInline language="tsx" scope={scope}>
+        <LivePreview />
+        <LiveError />
+      </LiveProvider>
     </div>
   );
 
