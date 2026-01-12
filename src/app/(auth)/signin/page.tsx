@@ -128,14 +128,16 @@ export default function SignInPage() {
               variant="ghost"
               size="sm"
               className="h-7 px-2"
-              onClick={() => navigator.clipboard.writeText("test@example.com")}
+              onClick={() =>
+                navigator.clipboard.writeText("alcahammad@gmail.com")
+              }
             >
               Copy
             </Button>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground">Password:</span>
-            <code className="rounded bg-muted px-1 py-0.5">Test@1234</code>
+            <code className="rounded bg-muted px-1 py-0.5">12345678</code>
             <Button
               type="button"
               variant="ghost"
