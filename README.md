@@ -48,7 +48,7 @@ A modern, production-ready SaaS boilerplate built with Next.js 14, featuring AI 
 1. **Clone the repository**
 
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/ahammadabdullah/saasify
    cd ai-saas-template
    ```
 
