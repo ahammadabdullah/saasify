@@ -31,37 +31,6 @@ export async function signUpWithEmailAndPassword({
       },
     };
   }
-  // const { user } = authData;
-  // const userId = user?.id;
-  // const email = user?.email;
-  // const user_name = user?.user_metadata?.name || "";
-  // try {
-  //   const res = await fetch(
-  //     `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/lemon/create-customer`,
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         email,
-  //         name: user_name,
-  //         userId,
-  //       }),
-  //     }
-  //   );
-  //   const data = await res.json();
-  //   if (!data.customerId) {
-  //     return {
-  //       success: false,
-  //       error: {
-  //         message: "Failed to create account",
-  //       },
-  //     };
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
   revalidatePath("/", "layout");
   return { success: true };
 }

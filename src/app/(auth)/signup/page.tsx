@@ -16,6 +16,7 @@ import { toast } from "@/hooks/use-toast";
 import { CreateUserInput, createUserSchema } from "@/lib/user-schema";
 import useSupabaseClient from "@/lib/supabase/client";
 import { signUpWithEmailAndPassword } from "@/app/_action";
+import SocialLogin from "@/components/auth/social-login";
 
 export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -162,35 +163,7 @@ export default function SignUpPage() {
           {isPending ? "Loading..." : "Sign Up"}
         </Button>
       </form>
-      <div className="mt-6">
-        <Separator className="my-4" />
-        <div className="grid grid-cols-3 gap-3">
-          <Button
-            variant="outline"
-            onClick={() => loginWithProvider("google")}
-            disabled={isLoading}
-          >
-            <Icons.google className="h-5 w-5" />
-            <span className="sr-only">Sign In with Google</span>
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => loginWithProvider("linkedin")}
-            disabled={isLoading}
-          >
-            <Icons.linkedin className="h-5 w-5" />
-            <span className="sr-only">Sign In with LinkedIn</span>
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => loginWithProvider("twitter")}
-            disabled={isLoading}
-          >
-            <Icons.twitter className="h-5 w-5" />
-            <span className="sr-only">Sign In with Twitter</span>
-          </Button>
-        </div>
-      </div>
+      <SocialLogin isSubmitting={isLoading} />
     </AuthForm>
   );
 }

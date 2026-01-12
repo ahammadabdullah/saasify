@@ -15,12 +15,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { signInWithEmailAndPassword } from "@/app/_action";
 import { loginUserSchema } from "@/lib/user-schema";
+import SocialLogin from "@/components/auth/social-login";
 
 type LoginSchema = z.infer<typeof loginUserSchema>;
 
 export default function SignInPage() {
   const router = useRouter();
-  const supabase = useSupabaseClient();
+
   const { toast } = useToast();
 
   const {
@@ -51,25 +52,6 @@ export default function SignInPage() {
       toast({
         title: "Unexpected error",
         description: "Something went wrong",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const loginWithProvider = async (
-    provider: "google" | "twitter" | "linkedin_oidc"
-  ) => {
-    try {
-      await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
-        },
-      });
-    } catch (error: any) {
-      toast({
-        title: "OAuth Error",
-        description: error?.message || "Something went wrong",
         variant: "destructive",
       });
     }
@@ -133,35 +115,40 @@ export default function SignInPage() {
           Sign In
         </Button>
       </form>
-      <div className="mt-6">
-        <Separator className="my-4" />
-        <div className="grid grid-cols-3 gap-3">
-          <Button
-            variant="outline"
-            onClick={() => loginWithProvider("google")}
-            disabled={isSubmitting}
-          >
-            <Icons.google className="h-5 w-5" />
-            <span className="sr-only">Sign In with Google</span>
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => loginWithProvider("linkedin_oidc")}
-            disabled={isSubmitting}
-          >
-            <Icons.linkedin className="h-5 w-5" />
-            <span className="sr-only">Sign In with LinkedIn</span>
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => loginWithProvider("twitter")}
-            disabled={isSubmitting}
-          >
-            <Icons.twitter className="h-5 w-5" />
-            <span className="sr-only">Sign In with Twitter</span>
-          </Button>
+      <div className="my-4 rounded-md border bg-muted/40 p-4 text-sm">
+        <p className="mb-2 font-medium">Test Credentials</p>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground">Email:</span>
+            <code className="rounded bg-muted px-1 py-0.5">
+              alcahammad@gmail.com
+            </code>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2"
+              onClick={() => navigator.clipboard.writeText("test@example.com")}
+            >
+              Copy
+            </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground">Password:</span>
+            <code className="rounded bg-muted px-1 py-0.5">Test@1234</code>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2"
+              onClick={() => navigator.clipboard.writeText("12345678")}
+            >
+              Copy
+            </Button>
+          </div>
         </div>
       </div>
+      <SocialLogin isSubmitting={isSubmitting} />
     </AuthForm>
   );
 }
