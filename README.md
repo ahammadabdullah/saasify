@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SaaSify - AI SaaS Boilerplate
 
-## Getting Started
+A modern, production-ready SaaS boilerplate built with Next.js 14, featuring AI integration, authentication, payments, and a beautiful dashboard UI.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=flat-square&logo=tailwind-css)
+![Supabase](https://img.shields.io/badge/Supabase-Auth-3ECF8E?style=flat-square&logo=supabase)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Features
+
+- **🤖 AI Chat Integration** - Built-in OpenAI-powered chat with multiple layout options
+- **🔐 Authentication** - Complete auth flow with Supabase (sign in, sign up, password reset, social login)
+- **💳 Payments** - Lemon Squeezy integration with subscription tiers (Starter, Professional, Enterprise)
+- **🎨 Modern UI** - Beautiful dashboard with resizable panels, dark/light themes
+- **📧 Email Composer** - Rich text email editor with preview functionality
+- **📁 File Upload** - Drag-and-drop file upload with image gallery
+- **🧩 UI Components** - Extensive collection of Radix UI primitives with shadcn/ui styling
+- **📱 Responsive** - Fully responsive design with collapsible sidebar
+
+## 🛠️ Tech Stack
+
+| Category         | Technology              |
+| ---------------- | ----------------------- |
+| Framework        | Next.js 14 (App Router) |
+| Language         | TypeScript              |
+| Styling          | Tailwind CSS            |
+| UI Components    | Radix UI + shadcn/ui    |
+| Authentication   | Supabase Auth           |
+| Database         | Supabase                |
+| AI               | OpenAI API              |
+| Payments         | Lemon Squeezy           |
+| State Management | TanStack Query          |
+| Forms            | React Hook Form + Zod   |
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- Supabase account
+- OpenAI API key
+- Lemon Squeezy account (for payments)
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <your-repo-url>
+   cd ai-saas-template
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+
+   Create a `.env.local` file in the root directory:
+
+   ```env
+   # Supabase
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+   # OpenAI
+   OPENAI_API_KEY=your_openai_api_key
+
+   # Lemon Squeezy (optional)
+   LEMONSQUEEZY_API_KEY=your_lemonsqueezy_api_key
+   ```
+
+4. **Run the development server**
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Open [http://localhost:3000](http://localhost:3000)**
+
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── (auth)/          # Auth pages (signin, signup, reset-password)
+│   ├── (dashboard)/     # Dashboard pages (home, chat, settings, etc.)
+│   └── api/v1/          # API routes (ai, emails, payments)
+├── components/
+│   ├── ui/              # Base UI components (shadcn/ui)
+│   ├── auth/            # Authentication components
+│   ├── chat/            # AI chat components
+│   ├── payment/         # Subscription & billing components
+│   └── ...              # Feature-specific components
+├── hooks/               # Custom React hooks
+└── lib/                 # Utilities & configurations
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📄 Available Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Command         | Description              |
+| --------------- | ------------------------ |
+| `npm run dev`   | Start development server |
+| `npm run build` | Build for production     |
+| `npm run start` | Start production server  |
+| `npm run lint`  | Run ESLint               |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎯 Dashboard Pages
 
-## Learn More
+- **Home** - Main dashboard landing
+- **AI Chat** - AI assistant with left/right layout options
+- **Settings** - User profile & subscription management
+- **Payments** - Subscription plans & billing
+- **File Upload** - File management with drag-and-drop
+- **Emails** - Email composer with rich text editor
+- **Icons** - Icon library browser
+- **Buttons** - Button component showcase
 
-To learn more about Next.js, take a look at the following resources:
+## 🔑 Authentication Flow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The app uses Supabase Auth with:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Email/password authentication
+- Social login providers
+- Protected routes via middleware
+- Password reset flow
 
-## Deploy on Vercel
+## 📝 License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is private and proprietary.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+Built with ❤️ using Next.js and Supabase
