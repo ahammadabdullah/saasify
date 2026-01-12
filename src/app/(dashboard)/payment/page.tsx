@@ -41,7 +41,7 @@ export default function PaymentPage() {
           <div className="space-y-6">
             <PayNowBanner currentDue={data?.currentDue} />
             <ActiveSubscription currentPlan={data?.currentPlan} />
-            <UpgradeCTA currentPlan={data?.currentPlan} />
+            <UpgradeCTA />
             {data?.currentPlan && <CancelSubscription />}
           </div>
           {/* Right Column */}
